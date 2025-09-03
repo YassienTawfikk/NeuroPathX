@@ -1,0 +1,44 @@
+NeuroPathX/
+│
+├── backend/                  # FastAPI app + model serving
+│   ├── main.py               # entrypoint (uvicorn runs this)
+│   ├── models/               # model loaders + inference code
+│   │   ├── classification/
+│   │   └── segmentation/
+│   ├── utils/                # preprocessing, postprocessing helpers
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── frontend/                 # user-facing web app
+│   ├── streamlit_app.py      # if Streamlit
+│   ├── static/               # css, js, assets
+│   ├── pages/                # multi-page Streamlit/Dash setup
+│   └── package.json          # if you later swap to React
+│
+├── workflow/                 # n8n (or other) automation flows
+│   ├── brain_tumor_flow.json # exported workflow
+│   └── README.md             # describe how to import/run
+│
+├── reports/                  # reporting system
+│   ├── templates/            # PDF/Word templates
+│   └── generators/           # code to fill templates
+│
+├── notebooks/                # experiments, training, EDA
+│   ├── classification.ipynb
+│   ├── segmentation.ipynb
+│   └── preprocessing.ipynb
+│
+├── data/                     # keep this gitignored
+│   └── sample_images/        # a few test MRIs for demo
+│
+├── tests/                    # pytest / integration tests
+│   └── test_api.py
+│
+├── docs/                     # documentation
+│   ├── architecture.png
+│   ├── api_spec.md
+│   └── usage_guide.md
+│
+├── docker-compose.yml        # orchestrate backend + frontend + db
+├── README.md                 # main project overview
+└── .gitignore
