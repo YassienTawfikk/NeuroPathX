@@ -11,9 +11,21 @@ NeuroPathX/
 │
 ├── frontend/                 # user-facing web app
 │   ├── streamlit_app.py      # if Streamlit
-│   ├── static/               # css, js, assets
-│   ├── pages/                # multi-page Streamlit/Dash setup
-│   └── package.json          # if you later swap to React
+│   │
+│   ├── index.html            # landing/upload page
+│   ├── results.html          # results dashboard page
+│   │
+│   ├── css/
+│   │   └── style.css         # all styling rules
+│   │
+│   ├── js/
+│   │   └── app.js            # core frontend logic (upload preview, mock API calls, DOM updates)
+│   │
+│   ├── assets/
+│   │   ├── logo.png        # branding/logo
+│   │   └── sample.png      # demo MRI slice (for testing)
+│   │
+│   └── README.md           # explain how to run the frontend (open in browser, or later hook to backend)
 │
 ├── workflow/                 # n8n (or other) automation flows
 │   ├── brain_tumor_flow.json # exported workflow
