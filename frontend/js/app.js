@@ -111,22 +111,25 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// --- Drag & Drop ---
-dropArea.addEventListener("dragover", (e) => {
+// --- Drag & Drop Anywhere ---
+document.addEventListener("dragover", (e) => {
     e.preventDefault();
-    dropArea.classList.add("dragover");
+    document.body.classList.add("dragover"); // optional styling
 });
-dropArea.addEventListener("dragleave", () => {
-    dropArea.classList.remove("dragover");
-});
-dropArea.addEventListener("drop", (e) => {
+
+document.addEventListener("dragleave", (e) => {
     e.preventDefault();
-    dropArea.classList.remove("dragover");
+    document.body.classList.remove("dragover");
+});
+
+document.addEventListener("drop", (e) => {
+    e.preventDefault();
+    document.body.classList.remove("dragover");
+
     if (e.dataTransfer.files.length) {
         handleFile(e.dataTransfer.files[0]);
     }
 });
-
 // --- Reset Button ---
 resetBtn.addEventListener("click", resetView);
 
