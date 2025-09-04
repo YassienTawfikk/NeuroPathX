@@ -22,8 +22,42 @@
         <i class="fa-solid fa-brain"></i> NeuroPathX
     </h1>
 
-    <!--<i class="fa-light fa-folder-arrow-up"></i>-->
-    <!--<i class="fa-solid fa-house"></i>-->
+    <div class="go-to-options">
+        <button class="options-btn"><i class="fa-solid fa-cloud-arrow-up"></i></button>
+        <button class="options-btn"><i class="fa-solid fa-house"></i></button>
+    </div>
+
 </header>
+
+<label for="file-upload" class="upload-box" id="drop-area">
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+    <p>Drag and drop file here</p>
+    <p><small>Limit 200MB per file • JPG, JPEG, PNG</small></p>
+    <span class="btn">Browse files</span>
+    <input id="file-upload" type="file" accept=".jpg,.jpeg,.png">
+</label>
+
+<script>
+    const dropArea = document.getElementById("drop-area");
+    const inputFile = document.getElementById("file-upload");
+
+    // Highlight on dragover
+    dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropArea.classList.add("dragover");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("dragover");
+    });
+
+    dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropArea.classList.remove("dragover");
+        inputFile.files = e.dataTransfer.files;
+        console.log("Dropped files:", inputFile.files);
+    });
+</script>
+
 </body>
 </html>
