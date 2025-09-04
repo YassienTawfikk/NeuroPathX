@@ -2,6 +2,8 @@ const dropArea = document.getElementById("drop-area");
 const inputFile = document.getElementById("file-upload");
 const img = document.getElementById("scanImage");
 const resetBtn = document.getElementById("resetBtn");
+const uploadBtn = document.getElementById("uploadBtn");
+const homeBtn = document.querySelector(".go-to-options .options-btn:nth-child(3)");
 
 let scale = 1;
 let posX = 0, posY = 0;
@@ -31,22 +33,16 @@ function resetView() {
 }
 
 function handleFile(file) {
-    // Validate type
     if (!ALLOWED.includes(file.type)) {
         alert("Only JPG and PNG are supported.");
         return;
     }
-
-    // Validate size
     if (file.size > MAX_BYTES) {
         alert(`File exceeds ${MAX_MB} MB limit.`);
         return;
     }
-
-    // Clean up old URL if exists
     if (objectURL) URL.revokeObjectURL(objectURL);
 
-    // Create a new preview URL
     objectURL = URL.createObjectURL(file);
     img.src = objectURL;
     img.alt = file.name;
@@ -55,24 +51,18 @@ function handleFile(file) {
 
     // Mark UI as "uploaded"
     document.body.classList.add("uploaded");
+    document.querySelector(".upload-box").style.display = "none";
+    document.querySelector(".scan-box").style.display = "grid";
+    document.querySelector(".start-header .title-autograph").style.transform = "translateX(calc(-50vw + 150px))";
+
+    // Save to localStorage (persist state)
+    localStorage.setItem("uploadedImage", objectURL);
+    localStorage.setItem("uploadedName", file.name);
 }
 
-// --- Drag & Drop ---
-dropArea.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropArea.classList.add("dragover");
-});
-
-dropArea.addEventListener("dragleave", () => {
-    dropArea.classList.remove("dragover");
-});
-
-dropArea.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropArea.classList.remove("dragover");
-    if (e.dataTransfer.files.length) {
-        handleFile(e.dataTransfer.files[0]);
-    }
+// --- Upload Button ---
+uploadBtn.addEventListener("click", () => {
+    inputFile.click();
 });
 
 // --- File Input ---
@@ -82,10 +72,65 @@ inputFile.addEventListener("change", (e) => {
     }
 });
 
+// --- Home Button ---
+homeBtn.addEventListener("click", () => {
+    document.querySelector(".upload-box").style.display = "grid";
+    document.querySelector(".scan-box").style.display = "none";
+    document.querySelector(".start-header .title-autograph").style.transform = "translateX(0)";
+    img.src = "";
+
+    if (objectURL) {
+        URL.revokeObjectURL(objectURL);
+        objectURL = null;
+    }
+    resetView();
+
+    document.body.classList.remove("uploaded");
+
+    // Clear persistence
+    localStorage.removeItem("uploadedImage");
+    localStorage.removeItem("uploadedName");
+});
+
+// --- Restore on Page Load ---
+window.addEventListener("DOMContentLoaded", () => {
+    const savedImage = localStorage.getItem("uploadedImage");
+    const savedName = localStorage.getItem("uploadedName");
+
+    if (savedImage) {
+        objectURL = savedImage;
+        img.src = savedImage;
+        img.alt = savedName || "Uploaded Image";
+
+        document.body.classList.add("uploaded");
+        document.querySelector(".upload-box").style.display = "none";
+        document.querySelector(".scan-box").style.display = "grid";
+        document.querySelector(".start-header .title-autograph").style.transform = "translateX(calc(-50vw + 150px))";
+
+        resetView();
+    }
+});
+
+// --- Drag & Drop ---
+dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.classList.add("dragover");
+});
+dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("dragover");
+});
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("dragover");
+    if (e.dataTransfer.files.length) {
+        handleFile(e.dataTransfer.files[0]);
+    }
+});
+
 // --- Reset Button ---
 resetBtn.addEventListener("click", resetView);
 
-// --- Zoom (trackpad pinch = ctrl+wheel) ---
+// --- Zoom ---
 img.addEventListener("wheel", e => {
     if (e.ctrlKey) {
         e.preventDefault();
@@ -110,7 +155,7 @@ window.addEventListener("mousemove", e => {
     }
 });
 
-// --- Brightness & Contrast (2-finger scroll, Shift for contrast) ---
+// --- Brightness & Contrast ---
 img.addEventListener("wheel", e => {
     if (!e.ctrlKey) {
         e.preventDefault();
