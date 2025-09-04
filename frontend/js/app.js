@@ -163,10 +163,10 @@ img.addEventListener("wheel", e => {
     if (!e.ctrlKey) {
         e.preventDefault();
         if (e.shiftKey) {
-            contrast += e.deltaY * -0.005;
+            contrast -= e.deltaY * -0.005;
             contrast = Math.max(0.2, Math.min(3, contrast));
         } else {
-            brightness += e.deltaY * -0.005;
+            brightness -= e.deltaY * -0.005;
             brightness = Math.max(0.2, Math.min(3, brightness));
         }
         updateTransform();
