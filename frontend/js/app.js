@@ -181,5 +181,10 @@ img.addEventListener("mousedown", (e) => {
     if (e.detail > 1) e.preventDefault(); // disable double click default
 });
 
+// --- Disable right-click on the image ---
+img.addEventListener("contextmenu", e => {
+    e.preventDefault();
+    return false;
+});
 // --- Init ---
 updateTransform();
