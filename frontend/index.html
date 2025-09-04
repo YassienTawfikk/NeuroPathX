@@ -6,7 +6,7 @@
 
     <!-- main template -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- render all the elments normally -->
+    <!-- render all the elements normally -->
     <link rel="stylesheet" href="css/normalize.css">
     <!-- for the icons -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
@@ -37,27 +37,7 @@
     <input id="file-upload" type="file" accept=".jpg,.jpeg,.png">
 </label>
 
-<script>
-    const dropArea = document.getElementById("drop-area");
-    const inputFile = document.getElementById("file-upload");
-
-    // Highlight on dragover
-    dropArea.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        dropArea.classList.add("dragover");
-    });
-
-    dropArea.addEventListener("dragleave", () => {
-        dropArea.classList.remove("dragover");
-    });
-
-    dropArea.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropArea.classList.remove("dragover");
-        inputFile.files = e.dataTransfer.files;
-        console.log("Dropped files:", inputFile.files);
-    });
-</script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
