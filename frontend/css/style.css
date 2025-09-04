@@ -1,0 +1,111 @@
+/* Variables */
+:root {
+    --mainColor: #2096f3;
+    --bg1: rgba(255, 255, 255, 0.68);
+    --bg2: rgba(0, 0, 0, 0.87);
+    --btow: #000;
+    --wtob: #fff;
+    --bshdaow: rgb(0 0 0 / 40%)
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg1: rgb(18, 18, 18);
+        --bg2: rgb(0, 0, 0);
+        --btow: #fff;
+        --wtob: #000;
+        --bshdaow: rgb(255, 255, 255, 40%)
+    }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------------------------------------ */
+
+/* Start Global Rules */
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg1);
+}
+
+.container {
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+/* Small Screens */
+@media (min-width: 768px) {
+    .container {
+        width: 750px
+    }
+}
+
+/* Medium Screens*/
+@media (min-width: 992px) {
+    .container {
+        width: 970px
+    }
+}
+
+/* Large Screens */
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px
+    }
+}
+
+.image > img {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.sharp-bord {
+    display: flex;
+    position: absolute;
+    top: -40px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.sharp-bord .triangle {
+    border-width: 20px;
+    border-style: solid;
+}
+
+/* End Global Rules */
+.start-header {
+    padding: 10px 0;
+    background-color: var(--bg2);
+    color: var(--wtob);
+}
+
+.title-autograph {
+    font-family: "Neonderthaw", cursive;
+    font-size: 2.5rem;
+    font-style: normal;
+    color: var(--mainColor);
+    margin-left: 25px;
+    transform: translateX(40%);
+    transition: all 1s ease-in-out;
+}
+
+.start-header:hover .title-autograph {
+    transform: translateX(20px);
+}
