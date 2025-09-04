@@ -21,7 +21,6 @@
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------ */
-
 /* Start Global Rules */
 html {
     scroll-behavior: smooth;
@@ -102,7 +101,6 @@ button {
 }
 
 /* End Global Rules */
-
 /* ========================================================================================================== */
 /* Header */
 .start-header {
@@ -246,10 +244,9 @@ button {
 
 /* ========================================================================================================== */
 
-/* Main scan viewer box */
 .scan-box {
     display: none;
-    width: 800px;
+    width: 750px;
     height: 600px;
     margin: 20px auto;
     background: #111;
@@ -323,7 +320,6 @@ button {
     border-top: 1px solid var(--mainColor);
 }
 
-/* Diagnose button */
 .diagnose-btn {
     background-color: var(--mainColor);
     color: white;
@@ -342,6 +338,7 @@ button {
 @media (max-width: 768px) {
     .scan-box {
         height: auto;
+        width: 95%;
         padding: 10px;
     }
 
