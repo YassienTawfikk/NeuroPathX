@@ -255,6 +255,13 @@ button {
     overflow: hidden;
 }
 
+#scanImage {
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 .viewer-container {
     display: flex;
     flex-direction: column;
