@@ -249,14 +249,15 @@ button {
 /* Main scan viewer box */
 .scan-box {
     display: none;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 100px);
-    background-color: var(--bg1);
-    padding: 20px;
+    width: 800px;
+    height: 600px;
+    margin: 20px auto;
+    background: #111;
+    border: 2px solid #444;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-/* Container with border and shadow */
 .viewer-container {
     display: flex;
     flex-direction: column;
@@ -270,7 +271,6 @@ button {
     overflow: hidden;
 }
 
-/* Header with title + reset button */
 .viewer-header {
     display: flex;
     justify-content: space-between;
@@ -301,7 +301,6 @@ button {
     color: var(--wtob);
 }
 
-/* Image area */
 .viewer-image {
     flex: 1;
     display: flex;
@@ -317,7 +316,6 @@ button {
     display: block;
 }
 
-/* Footer (diagnose button area) */
 .viewer-footer {
     background-color: var(--bg3);
     padding: 12px 20px;
