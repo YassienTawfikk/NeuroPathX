@@ -22,7 +22,7 @@ NeuroPathX/
 │   │   └── app.js            # core frontend logic (upload preview, mock API calls, DOM updates)
 │   │
 │   ├── assets/
-│   │   ├── logo.png        # branding/logo
+│   │   ├── favicon.png        # branding/favicon
 │   │   └── sample.png      # demo MRI slice (for testing)
 │   │
 │   └── README.md           # explain how to run the frontend (open in browser, or later hook to backend)
@@ -40,7 +40,7 @@ NeuroPathX/
 │   ├── segmentation.ipynb
 │   └── preprocessing.ipynb
 │
-├── data/                     # keep this gitignored
+├── data/                     # keep this git ignored
 │   └── sample_images/        # a few test MRIs for demo
 │
 ├── tests/                    # pytest / integration tests
