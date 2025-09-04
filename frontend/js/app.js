@@ -173,5 +173,13 @@ img.addEventListener("wheel", e => {
     }
 });
 
+// Prevent dragging the image into a new tab
+img.addEventListener("dragstart", (e) => e.preventDefault());
+
+// Prevent double-click opening image in new tab / selecting it
+img.addEventListener("mousedown", (e) => {
+    if (e.detail > 1) e.preventDefault(); // disable double click default
+});
+
 // --- Init ---
 updateTransform();
