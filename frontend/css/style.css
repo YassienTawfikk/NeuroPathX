@@ -161,10 +161,43 @@ button {
     color: var(--wtob);
 }
 
+@media (max-width: 768px) {
+    .start-header {
+        flex-direction: column; /* stack title + buttons */
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        padding: 15px 10px;
+    }
+
+    .title-autograph {
+        font-size: 2.5rem; /* resize title */
+        margin-bottom: 12px; /* space between title and buttons */
+        transform: none !important; /* disable hover slide */
+        text-align: center;
+    }
+
+    .go-to-options {
+        /*display: none;*/
+        position: static;
+        flex-direction: row;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin: 0;
+    }
+
+    .options-btn {
+        font-size: 20px;
+        margin: 0 10px;
+        padding: 5px 10px;
+    }
+}
+
 /* ========================================================================================================== */
 /* Upload Box */
 .upload-box {
     display: grid;
+    /*display: none;*/
     border: 2px dashed #666;
     border-radius: 8px;
     padding: 40px;
@@ -216,4 +249,213 @@ button {
     display: none;
 }
 
+@media (max-width: 768px) {
+    .upload-box {
+        width: 90%;
+        margin: 20px 5%;
+    }
+}
+
 /* ========================================================================================================== */
+
+/* Main scan viewer box */
+.scan-box {
+    display: flex;
+    /*display: none;*/
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    background-color: var(--bg1);
+    padding: 20px;
+}
+
+/* Container with border and shadow */
+.viewer-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1000px;
+    height: 100%;
+    background-color: var(--bg2);
+    border: 2px solid var(--mainColor);
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--bshdaow);
+    overflow: hidden;
+}
+
+/* Header with title + reset button */
+.viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg3);
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--mainColor);
+}
+
+.viewer-header h2 {
+    font-size: 1.2rem;
+    color: var(--mainColor);
+    margin: 0;
+}
+
+.viewer-tools button {
+    background: none;
+    border: 1px solid var(--mainColor);
+    border-radius: 6px;
+    color: var(--mainColor);
+    font-size: 1rem;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.viewer-tools button:hover {
+    background-color: var(--mainColor);
+    color: var(--wtob);
+}
+
+/* Image area */
+.viewer-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    overflow: hidden;
+}
+
+.viewer-image img {
+    max-width: none;
+    max-height: none;
+    display: block;
+}
+
+/* Footer (diagnose button area) */
+.viewer-footer {
+    background-color: var(--bg3);
+    padding: 12px 20px;
+    text-align: right;
+    border-top: 1px solid var(--mainColor);
+}
+
+/* Diagnose button */
+.diagnose-btn {
+    background-color: var(--mainColor);
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.diagnose-btn:hover {
+    background-color: #1976d2; /* darker shade for hover */
+}
+
+@media (max-width: 768px) {
+    .scan-box {
+        height: auto; /* let it flow naturally */
+        padding: 10px;
+    }
+
+    .viewer-container {
+        height: auto; /* don’t force 100% height */
+        max-width: 100%;
+    }
+
+    .viewer-header {
+        align-items: flex-start;
+        padding: 8px 12px;
+    }
+
+    .viewer-header h2 {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+
+    .viewer-tools button {
+        font-size: 0.9rem;
+        padding: 4px 10px;
+    }
+
+    .viewer-image {
+        max-height: 60vh; /* image area gets priority */
+    }
+
+    .viewer-footer {
+        text-align: center; /* center button on mobile */
+        padding: 10px;
+    }
+
+    .diagnose-btn {
+        width: 100%; /* full-width button */
+        font-size: 1rem;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .scan-box {
+        flex-direction: column;
+        height: auto;
+        padding: 8px;
+    }
+
+    .viewer-container {
+        width: 100%;
+        max-width: 400px; /* prevent it from going crazy wide */
+        aspect-ratio: 1 / 1; /* 🔑 force square shape */
+        border-width: 1px;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Header */
+    .viewer-header {
+        align-items: center;
+        padding: 6px 10px;
+        text-align: center;
+    }
+
+    .viewer-header h2 {
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+    }
+
+    .viewer-tools button {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+
+    /* Image */
+    .viewer-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #000;
+        overflow: hidden;
+    }
+
+    .viewer-image img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 2px;
+    }
+
+    /* Footer */
+    .viewer-footer {
+        padding: 8px 10px;
+        text-align: center;
+    }
+
+    .diagnose-btn {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 10px;
+        border-radius: 4px;
+    }
+}
