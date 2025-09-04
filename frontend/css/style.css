@@ -111,10 +111,10 @@ button {
     background-color: var(--bg2);
     color: var(--wtob);
     display: flex;
-    justify-content: center; /* centers title initially */
+    justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden; /* keep things neat */
+    overflow: hidden;
 }
 
 .title-autograph {
@@ -153,7 +153,7 @@ button {
 
 @media (max-width: 768px) {
     .start-header {
-        flex-direction: column; /* stack title + buttons */
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: auto;
@@ -336,7 +336,7 @@ button {
 }
 
 .diagnose-btn:hover {
-    background-color: #1976d2; /* darker shade for hover */
+    background-color: #1976d2;
 }
 
 @media (max-width: 768px) {
@@ -390,8 +390,8 @@ button {
 
     .viewer-container {
         width: 100%;
-        max-width: 400px; /* prevent it from going crazy wide */
-        aspect-ratio: 1 / 1; /* 🔑 force square shape */
+        max-width: 400px;
+        aspect-ratio: 1 / 1;
         border-width: 1px;
         border-radius: 6px;
         display: flex;
