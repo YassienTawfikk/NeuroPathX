@@ -5,6 +5,7 @@
 /.idea/
 /.ipynb_checkpoints/
 
+/frontend/assets/slice-sample.jpg
 .DS_Store
 *.pyc
 *.pkl
