@@ -1,23 +1,42 @@
+// ======================================================
+// DOM ELEMENTS
+// ======================================================
 const dropArea = document.getElementById("drop-area");
 const inputFile = document.getElementById("file-upload");
 const img = document.getElementById("scanImage");
 const resetBtn = document.getElementById("resetBtn");
 const uploadBtn = document.getElementById("uploadBtn");
 const homeBtn = document.querySelector(".go-to-options .options-btn:nth-child(3)");
+const diagnoseBtn = document.querySelector(".diagnose-btn");
 
-let scale = 1;
-let posX = 0, posY = 0;
-let brightness = 1;
-let contrast = 1;
+const resultsWrapper = document.querySelector(".scan-results-wrapper");
+const resultsBox = document.querySelector(".results-box");
 
-let isDragging = false;
-let startX, startY;
+// Modal
+const resultsModal = document.getElementById("results-modal");
+const resultsIframe = resultsModal.querySelector("iframe");
+const resultsCloseBtn = resultsModal.querySelector(".close-btn");
+const previewBtn = document.querySelector(".preview-btn");
+const downloadBtn = document.getElementById("downloadReport");
+
+
+// ======================================================
+// STATE
+// ======================================================
+let scale = 1, posX = 0, posY = 0;
+let brightness = 1, contrast = 1;
+let isDragging = false, startX, startY;
 let objectURL = null;
 
 const MAX_MB = 200;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
 const ALLOWED = ["image/jpeg", "image/png", "image/jpg"];
+const REPORT_URL = "assets/report-sample.pdf";
 
+
+// ======================================================
+// IMAGE VIEWER FUNCTIONS (transform, reset, drag, zoom)
+// ======================================================
 function updateTransform() {
     img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
     img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
@@ -32,6 +51,10 @@ function resetView() {
     updateTransform();
 }
 
+
+// ======================================================
+// FILE HANDLING
+// ======================================================
 function handleFile(file) {
     if (!ALLOWED.includes(file.type)) {
         alert("Only JPG and PNG are supported.");
@@ -49,57 +72,50 @@ function handleFile(file) {
 
     resetView();
 
-    // Mark UI as "uploaded"
+    // Update UI
     document.body.classList.add("uploaded");
     document.querySelector(".upload-box").style.display = "none";
     document.querySelector(".scan-box").style.display = "grid";
-    document.querySelector(".scan-results-wrapper").style.display = "block";
-    document.querySelector(".results-box").style.display = "none";
+    resultsWrapper.style.display = "block";
+    resultsBox.style.display = "none";
     document.querySelector(".start-header .title-autograph").style.transform =
         "translateX(calc(-50vw + 150px))";
 
-    // Save to sessionStorage
+    // Persist
     sessionStorage.setItem("uploadedImage", objectURL);
     sessionStorage.setItem("uploadedName", file.name);
-    sessionStorage.setItem("resultsVisible", "false"); // reset results state
+    sessionStorage.setItem("resultsVisible", "false");
 }
 
-// --- Upload Button ---
-uploadBtn.addEventListener("click", () => {
-    inputFile.click();
-});
 
-// --- File Input ---
+// ======================================================
+// EVENT HANDLERS: UPLOAD / HOME / RESTORE
+// ======================================================
+uploadBtn.addEventListener("click", () => inputFile.click());
+
 inputFile.addEventListener("change", (e) => {
-    if (e.target.files.length) {
-        handleFile(e.target.files[0]);
-    }
+    if (e.target.files.length) handleFile(e.target.files[0]);
 });
 
-// --- Home Button ---
 homeBtn.addEventListener("click", () => {
+    // Reset UI
     document.querySelector(".upload-box").style.display = "grid";
     document.querySelector(".scan-box").style.display = "none";
-    document.querySelector(".scan-results-wrapper").style.display = "none";
-    document.querySelector(".results-box").style.display = "none";
+    resultsWrapper.style.display = "none";
+    resultsBox.style.display = "none";
     document.querySelector(".start-header .title-autograph").style.transform = "translateX(0)";
     img.src = "";
 
+    // Cleanup
     if (objectURL) {
         URL.revokeObjectURL(objectURL);
         objectURL = null;
     }
     resetView();
-
     document.body.classList.remove("uploaded");
-
-    // Clear persistence
-    sessionStorage.removeItem("uploadedImage");
-    sessionStorage.removeItem("uploadedName");
-    sessionStorage.removeItem("resultsVisible");
+    sessionStorage.clear();
 });
 
-// --- Restore on Page Load ---
 window.addEventListener("DOMContentLoaded", () => {
     const savedImage = sessionStorage.getItem("uploadedImage");
     const savedName = sessionStorage.getItem("uploadedName");
@@ -115,45 +131,40 @@ window.addEventListener("DOMContentLoaded", () => {
         document.querySelector(".start-header .title-autograph").style.transform =
             "translateX(calc(-50vw + 150px))";
 
-        // restore results visibility
+        // Restore results state
         const resultsVisible = sessionStorage.getItem("resultsVisible");
-        if (resultsVisible === "true") {
-            document.querySelector(".results-box").style.display = "flex";
-            document.querySelector(".scan-results-wrapper").style.display = "grid";
-        } else {
-            document.querySelector(".results-box").style.display = "none";
-            document.querySelector(".scan-results-wrapper").style.display = "block";
-
-        }
+        resultsBox.style.display = resultsVisible === "true" ? "flex" : "none";
+        resultsWrapper.style.display = resultsVisible === "true" ? "grid" : "block";
 
         resetView();
     }
 });
 
-// --- Drag & Drop Anywhere ---
+
+// ======================================================
+// DRAG & DROP
+// ======================================================
 document.addEventListener("dragover", (e) => {
     e.preventDefault();
     document.body.classList.add("dragover");
 });
-
 document.addEventListener("dragleave", (e) => {
     e.preventDefault();
     document.body.classList.remove("dragover");
 });
-
 document.addEventListener("drop", (e) => {
     e.preventDefault();
     document.body.classList.remove("dragover");
-
-    if (e.dataTransfer.files.length) {
-        handleFile(e.dataTransfer.files[0]);
-    }
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
 });
 
-// --- Reset Button ---
+
+// ======================================================
+// VIEWER CONTROLS (zoom, pan, brightness, contrast)
+// ======================================================
 resetBtn.addEventListener("click", resetView);
 
-// --- Zoom ---
+// Zoom with Ctrl + wheel
 img.addEventListener("wheel", (e) => {
     if (e.ctrlKey) {
         e.preventDefault();
@@ -163,13 +174,13 @@ img.addEventListener("wheel", (e) => {
     }
 });
 
-// --- Drag to Pan ---
+// Pan
 img.addEventListener("mousedown", (e) => {
     isDragging = true;
     startX = e.clientX - posX;
     startY = e.clientY - posY;
 });
-window.addEventListener("mouseup", () => (isDragging = false));
+window.addEventListener("mouseup", () => isDragging = false);
 window.addEventListener("mousemove", (e) => {
     if (isDragging) {
         posX = e.clientX - startX;
@@ -178,7 +189,7 @@ window.addEventListener("mousemove", (e) => {
     }
 });
 
-// --- Brightness & Contrast ---
+// Brightness & Contrast (wheel without ctrl)
 img.addEventListener("wheel", (e) => {
     if (!e.ctrlKey) {
         e.preventDefault();
@@ -193,30 +204,52 @@ img.addEventListener("wheel", (e) => {
     }
 });
 
-// Prevent dragging the image into a new tab
+// Prevent unwanted interactions
 img.addEventListener("dragstart", (e) => e.preventDefault());
-
-// Prevent double-click selecting / opening
 img.addEventListener("mousedown", (e) => {
     if (e.detail > 1) e.preventDefault();
 });
+img.addEventListener("contextmenu", (e) => e.preventDefault());
 
-// --- Disable right-click on the image ---
-img.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-    return false;
-});
 
-// --- Diagnose Button ---
-const diagnoseBtn = document.querySelector(".diagnose-btn");
-const resultsWrapper = document.querySelector(".scan-results-wrapper");
-const resultsBox = document.querySelector(".results-box");
-
+// ======================================================
+// DIAGNOSE BUTTON
+// ======================================================
 diagnoseBtn.addEventListener("click", () => {
     resultsWrapper.style.display = "grid";
     resultsBox.style.display = "flex";
-    sessionStorage.setItem("resultsVisible", "true"); // persist visibility
+    sessionStorage.setItem("resultsVisible", "true");
 });
 
-// --- Init ---
+
+// ======================================================
+// RESULTS MODAL (Preview + Download)
+// ======================================================
+function openResultsModal(url) {
+    resultsIframe.src = url;
+    resultsModal.classList.add("show");
+}
+
+resultsCloseBtn.onclick = () => resultsModal.classList.remove("show");
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && resultsModal.classList.contains("show")) {
+        resultsCloseBtn.click();
+    }
+});
+
+previewBtn.addEventListener("click", () => openResultsModal(REPORT_URL));
+
+downloadBtn.addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.href = REPORT_URL;
+    link.download = "MRI_Report.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+
+
+// ======================================================
+// INIT
+// ======================================================
 updateTransform();
