@@ -55,9 +55,9 @@ function handleFile(file) {
     document.querySelector(".scan-box").style.display = "grid";
     document.querySelector(".start-header .title-autograph").style.transform = "translateX(calc(-50vw + 150px))";
 
-    // Save to localStorage (persist state)
-    localStorage.setItem("uploadedImage", objectURL);
-    localStorage.setItem("uploadedName", file.name);
+    // Save to sessionStorage (not localStorage)
+    sessionStorage.setItem("uploadedImage", objectURL);
+    sessionStorage.setItem("uploadedName", file.name);
 }
 
 // --- Upload Button ---
@@ -88,14 +88,14 @@ homeBtn.addEventListener("click", () => {
     document.body.classList.remove("uploaded");
 
     // Clear persistence
-    localStorage.removeItem("uploadedImage");
-    localStorage.removeItem("uploadedName");
+    sessionStorage.removeItem("uploadedImage");
+    sessionStorage.removeItem("uploadedName");
 });
 
 // --- Restore on Page Load ---
 window.addEventListener("DOMContentLoaded", () => {
-    const savedImage = localStorage.getItem("uploadedImage");
-    const savedName = localStorage.getItem("uploadedName");
+    const savedImage = sessionStorage.getItem("uploadedImage");
+    const savedName = sessionStorage.getItem("uploadedName");
 
     if (savedImage) {
         objectURL = savedImage;
@@ -130,6 +130,7 @@ document.addEventListener("drop", (e) => {
         handleFile(e.dataTransfer.files[0]);
     }
 });
+
 // --- Reset Button ---
 resetBtn.addEventListener("click", resetView);
 
@@ -138,7 +139,7 @@ img.addEventListener("wheel", e => {
     if (e.ctrlKey) {
         e.preventDefault();
         scale += e.deltaY * -0.01;
-        scale = Math.min(Math.max(1, scale), 5);
+        scale = Math.min(Math.max(1, scale), 5); // min zoom = 1, not a tiny dot
         updateTransform();
     }
 });
@@ -186,5 +187,6 @@ img.addEventListener("contextmenu", e => {
     e.preventDefault();
     return false;
 });
+
 // --- Init ---
 updateTransform();
