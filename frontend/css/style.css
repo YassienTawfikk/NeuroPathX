@@ -390,12 +390,12 @@ body.uploaded .start-header .title-autograph {
 
 .results-box *::selection {
     background: var(--mainColor);
-    color: black;
+    color: var(--wtob);
 }
 
 .results-box *::-moz-selection {
     background: var(--mainColor);
-    color: black;
+    color: var(--wtob);
 }
 
 .result-title {
