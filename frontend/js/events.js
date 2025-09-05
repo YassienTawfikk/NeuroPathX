@@ -1,10 +1,12 @@
 // events.js
+
+// --- File upload ---
 uploadBtn.addEventListener("click", () => inputFile.click());
 inputFile.addEventListener("change", (e) => {
     if (e.target.files.length) handleFile(e.target.files[0]);
 });
 
-// Home reset
+// --- Home reset ---
 homeBtn.addEventListener("click", () => {
     document.querySelector(".upload-box").style.display = "grid";
     document.querySelector(".scan-box").style.display = "none";
@@ -22,7 +24,7 @@ homeBtn.addEventListener("click", () => {
     sessionStorage.clear();
 });
 
-// Restore on load
+// --- Restore state on reload ---
 window.addEventListener("DOMContentLoaded", () => {
     const savedImage = sessionStorage.getItem("uploadedImage");
     const savedName = sessionStorage.getItem("uploadedName");
@@ -46,19 +48,22 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Drag & Drop
-document.addEventListener("dragover", (e) => { e.preventDefault(); document.body.classList.add("dragover"); });
-document.addEventListener("dragleave", (e) => { e.preventDefault(); document.body.classList.remove("dragover"); });
+// --- Drag & drop upload ---
+document.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    document.body.classList.add("dragover");
+});
+document.addEventListener("dragleave", (e) => {
+    e.preventDefault();
+    document.body.classList.remove("dragover");
+});
 document.addEventListener("drop", (e) => {
     e.preventDefault();
     document.body.classList.remove("dragover");
     if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
 });
 
-// Viewer controls
-resetBtn.addEventListener("click", resetView);
-
-// Zoom + Pan + Brightness/Contrast...
+// --- Viewer controls ---
 resetBtn.addEventListener("click", resetView);
 
 // Zoom with Ctrl + wheel
@@ -71,7 +76,7 @@ img.addEventListener("wheel", (e) => {
     }
 });
 
-// Pan
+// Pan with mouse drag
 img.addEventListener("mousedown", (e) => {
     isDragging = true;
     startX = e.clientX - posX;
@@ -86,7 +91,7 @@ window.addEventListener("mousemove", (e) => {
     }
 });
 
-// Brightness & Contrast (wheel without ctrl)
+// Brightness/contrast with wheel
 img.addEventListener("wheel", (e) => {
     if (!e.ctrlKey) {
         e.preventDefault();
@@ -107,3 +112,40 @@ img.addEventListener("mousedown", (e) => {
     if (e.detail > 1) e.preventDefault();
 });
 img.addEventListener("contextmenu", (e) => e.preventDefault());
+
+// --- Diagnose button → API call ---
+diagnoseBtn.addEventListener("click", async () => {
+    if (!inputFile.files.length) {
+        alert("Please upload an MRI image first.");
+        return;
+    }
+
+    const file = inputFile.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/mri_prediction", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        const result = await response.json();
+
+        // ✅ Update placeholders with backend response
+        document.querySelector(".result-title").textContent = `Tumor type: ${result.class}`;
+        document.querySelector(".confidence-badge").textContent = `${(result.confidence * 100).toFixed(2)}% confidence`;
+        document.querySelector(".result-summary").textContent = result.note || "No summary available.";
+
+        // Show results
+        resultsBox.style.display = "flex";
+        resultsWrapper.style.display = "grid";
+
+        // Save state
+        sessionStorage.setItem("resultsVisible", "true");
+    } catch (err) {
+        console.error("❌ API error:", err);
+        alert("Something went wrong while contacting the server.");
+    }
+});
