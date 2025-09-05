@@ -29,4 +29,8 @@ function handleFile(file) {
     sessionStorage.setItem("uploadedImage", objectURL);
     sessionStorage.setItem("uploadedName", file.name);
     sessionStorage.setItem("resultsVisible", "false");
+
+    // Re-enable diagnose button on new upload
+    diagnoseBtn.disabled = false;
+    diagnoseBtn.classList.remove("disabled");
 }

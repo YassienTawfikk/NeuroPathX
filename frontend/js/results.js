@@ -1,15 +1,10 @@
-// results.js
-diagnoseBtn.addEventListener("click", () => {
-    resultsWrapper.style.display = "grid";
-    resultsBox.style.display = "flex";
-    sessionStorage.setItem("resultsVisible", "true");
-});
-
+// Open results modal with PDF viewer
 function openResultsModal(url) {
     resultsIframe.src = url;
     resultsModal.classList.add("show");
 }
 
+// Close modal (button or Escape key)
 resultsCloseBtn.onclick = () => resultsModal.classList.remove("show");
 document.addEventListener("keydown", e => {
     if (e.key === "Escape" && resultsModal.classList.contains("show")) {
@@ -17,8 +12,10 @@ document.addEventListener("keydown", e => {
     }
 });
 
+// Preview report in modal
 previewBtn.addEventListener("click", () => openResultsModal(REPORT_URL));
 
+// Download report as PDF
 downloadBtn.addEventListener("click", () => {
     const link = document.createElement("a");
     link.href = REPORT_URL;
