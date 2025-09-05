@@ -6,6 +6,7 @@
 /.ipynb_checkpoints/
 
 /frontend/assets/slice-sample.jpg
+/frontend/assets/report-sample.pdf
 .DS_Store
 *.pyc
 *.pkl
