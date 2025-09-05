@@ -53,11 +53,15 @@ function handleFile(file) {
     document.body.classList.add("uploaded");
     document.querySelector(".upload-box").style.display = "none";
     document.querySelector(".scan-box").style.display = "grid";
-    document.querySelector(".start-header .title-autograph").style.transform = "translateX(calc(-50vw + 150px))";
+    document.querySelector(".scan-results-wrapper").style.display = "block";
+    document.querySelector(".results-box").style.display = "none";
+    document.querySelector(".start-header .title-autograph").style.transform =
+        "translateX(calc(-50vw + 150px))";
 
-    // Save to sessionStorage (not localStorage)
+    // Save to sessionStorage
     sessionStorage.setItem("uploadedImage", objectURL);
     sessionStorage.setItem("uploadedName", file.name);
+    sessionStorage.setItem("resultsVisible", "false"); // reset results state
 }
 
 // --- Upload Button ---
@@ -76,6 +80,8 @@ inputFile.addEventListener("change", (e) => {
 homeBtn.addEventListener("click", () => {
     document.querySelector(".upload-box").style.display = "grid";
     document.querySelector(".scan-box").style.display = "none";
+    document.querySelector(".scan-results-wrapper").style.display = "none";
+    document.querySelector(".results-box").style.display = "none";
     document.querySelector(".start-header .title-autograph").style.transform = "translateX(0)";
     img.src = "";
 
@@ -90,6 +96,7 @@ homeBtn.addEventListener("click", () => {
     // Clear persistence
     sessionStorage.removeItem("uploadedImage");
     sessionStorage.removeItem("uploadedName");
+    sessionStorage.removeItem("resultsVisible");
 });
 
 // --- Restore on Page Load ---
@@ -105,7 +112,19 @@ window.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("uploaded");
         document.querySelector(".upload-box").style.display = "none";
         document.querySelector(".scan-box").style.display = "grid";
-        document.querySelector(".start-header .title-autograph").style.transform = "translateX(calc(-50vw + 150px))";
+        document.querySelector(".start-header .title-autograph").style.transform =
+            "translateX(calc(-50vw + 150px))";
+
+        // restore results visibility
+        const resultsVisible = sessionStorage.getItem("resultsVisible");
+        if (resultsVisible === "true") {
+            document.querySelector(".results-box").style.display = "flex";
+            document.querySelector(".scan-results-wrapper").style.display = "grid";
+        } else {
+            document.querySelector(".results-box").style.display = "none";
+            document.querySelector(".scan-results-wrapper").style.display = "block";
+
+        }
 
         resetView();
     }
@@ -114,7 +133,7 @@ window.addEventListener("DOMContentLoaded", () => {
 // --- Drag & Drop Anywhere ---
 document.addEventListener("dragover", (e) => {
     e.preventDefault();
-    document.body.classList.add("dragover"); // optional styling
+    document.body.classList.add("dragover");
 });
 
 document.addEventListener("dragleave", (e) => {
@@ -135,23 +154,23 @@ document.addEventListener("drop", (e) => {
 resetBtn.addEventListener("click", resetView);
 
 // --- Zoom ---
-img.addEventListener("wheel", e => {
+img.addEventListener("wheel", (e) => {
     if (e.ctrlKey) {
         e.preventDefault();
         scale += e.deltaY * -0.01;
-        scale = Math.min(Math.max(1, scale), 5); // min zoom = 1, not a tiny dot
+        scale = Math.min(Math.max(1, scale), 5);
         updateTransform();
     }
 });
 
 // --- Drag to Pan ---
-img.addEventListener("mousedown", e => {
+img.addEventListener("mousedown", (e) => {
     isDragging = true;
     startX = e.clientX - posX;
     startY = e.clientY - posY;
 });
-window.addEventListener("mouseup", () => isDragging = false);
-window.addEventListener("mousemove", e => {
+window.addEventListener("mouseup", () => (isDragging = false));
+window.addEventListener("mousemove", (e) => {
     if (isDragging) {
         posX = e.clientX - startX;
         posY = e.clientY - startY;
@@ -160,7 +179,7 @@ window.addEventListener("mousemove", e => {
 });
 
 // --- Brightness & Contrast ---
-img.addEventListener("wheel", e => {
+img.addEventListener("wheel", (e) => {
     if (!e.ctrlKey) {
         e.preventDefault();
         if (e.shiftKey) {
@@ -177,15 +196,26 @@ img.addEventListener("wheel", e => {
 // Prevent dragging the image into a new tab
 img.addEventListener("dragstart", (e) => e.preventDefault());
 
-// Prevent double-click opening image in new tab / selecting it
+// Prevent double-click selecting / opening
 img.addEventListener("mousedown", (e) => {
-    if (e.detail > 1) e.preventDefault(); // disable double click default
+    if (e.detail > 1) e.preventDefault();
 });
 
 // --- Disable right-click on the image ---
-img.addEventListener("contextmenu", e => {
+img.addEventListener("contextmenu", (e) => {
     e.preventDefault();
     return false;
+});
+
+// --- Diagnose Button ---
+const diagnoseBtn = document.querySelector(".diagnose-btn");
+const resultsWrapper = document.querySelector(".scan-results-wrapper");
+const resultsBox = document.querySelector(".results-box");
+
+diagnoseBtn.addEventListener("click", () => {
+    resultsWrapper.style.display = "grid";
+    resultsBox.style.display = "flex";
+    sessionStorage.setItem("resultsVisible", "true"); // persist visibility
 });
 
 // --- Init ---
