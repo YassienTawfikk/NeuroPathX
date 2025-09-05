@@ -19,7 +19,7 @@ NeuroPathX/
 │   │   └── style.css         # all styling rules
 │   │
 │   ├── js/
-│   │   └── app.js            # core frontend logic (upload preview, mock API calls, DOM updates)
+│   │   └── dom.js            # core frontend logic (upload preview, mock API calls, DOM updates)
 │   │
 │   ├── assets/
 │   │   ├── favicon.png        # branding/favicon
