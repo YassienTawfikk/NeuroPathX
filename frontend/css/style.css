@@ -477,15 +477,15 @@ body.uploaded .start-header .title-autograph {
 /* ========================================================================================================== */
 /* --- Layout for scan + results --- */
 .scan-results-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* two equal columns */
+    display: block;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     align-items: start;
-    margin-top: 20px;
+    margin: 20px;
 }
 
 /* Responsive: stack vertically on smaller screens */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .scan-results-wrapper {
         grid-template-columns: 1fr; /* single column */
     }
@@ -503,7 +503,7 @@ body.uploaded .start-header .title-autograph {
     font-family: "Arial", sans-serif;
     max-width: 600px;
     width: 100%;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 12px;
 }
