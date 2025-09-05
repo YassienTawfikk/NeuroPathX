@@ -35,6 +35,10 @@ html {
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--bg1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .container {
