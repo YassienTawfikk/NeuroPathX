@@ -10,20 +10,24 @@ NeuroPathX/
 │   └── Dockerfile
 │
 ├── frontend/                 # user-facing web app
-│   ├── streamlit_app.py      # if Streamlit
 │   │
 │   ├── index.html            # landing/upload page
-│   ├── results.html          # results dashboard page
 │   │
 │   ├── css/
+│   │   ├── normalize.js      # normalize methods
 │   │   └── style.css         # all styling rules
 │   │
-│   ├── js/
-│   │   └── dom.js            # core frontend logic (upload preview, mock API calls, DOM updates)
+│   │── js/
+│   │   ├── dom.js         # all element lookups
+│   │   ├── state.js       # global state + constants
+│   │   ├── viewer.js      # zoom, pan, brightness, contrast
+│   │   ├── fileHandler.js # upload, drag & drop, restore
+│   │   ├── events.js      # event listeners
+│   │   ├── results.js     # diagnose + modal handling
+│   │   └── init.js        # initialize on load
 │   │
 │   ├── assets/
-│   │   ├── favicon.png        # branding/favicon
-│   │   └── sample.png      # demo MRI slice (for testing)
+│   │   └── favicon.png        # branding/favicon
 │   │
 │   └── README.md           # explain how to run the frontend (open in browser, or later hook to backend)
 │
