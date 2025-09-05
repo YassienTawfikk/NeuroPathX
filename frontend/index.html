@@ -42,21 +42,41 @@
     <input id="file-upload" type="file" accept=".jpg,.jpeg,.png">
 </label>
 
-<div class="scan-box">
-    <div class="viewer-container">
-        <div class="viewer-header">
-            <h2>Scan Viewer</h2>
-            <div class="viewer-tools">
-                <button title="Reset View" id="resetBtn"><i class="fa-solid fa-rotate-right"></i></button>
+<div class="scan-results-wrapper">
+    <div class="scan-box">
+        <div class="viewer-container">
+            <div class="viewer-header">
+                <h2>Scan Viewer</h2>
+                <div class="viewer-tools">
+                    <button title="Reset View" id="resetBtn">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="viewer-image">
+                <img id="scanImage" src="" alt="MRI Slice">
+            </div>
+
+            <div class="viewer-footer">
+                <button class="diagnose-btn">Diagnose</button>
             </div>
         </div>
+    </div>
 
-        <div class="viewer-image">
-            <img id="scanImage" src="" alt="MRI Slice">
-        </div>
-
-        <div class="viewer-footer">
-            <button class="diagnose-btn">Diagnose</button>
+    <!-- Results Box -->
+    <div class="results-box">
+        <h2 class="result-title">Tumor detected: Glioma</h2>
+        <span class="confidence-badge">92% confidence</span>
+        <p class="result-summary">
+            The uploaded MRI slice shows features consistent with a glioma.
+            Automated segmentation highlights the likely tumor boundaries,
+            helping visualize the affected region. Further radiological review
+            and clinical confirmation are advised.
+        </p>
+        <div class="result-actions">
+            <button class="preview-btn"><i class="fa-solid fa-eye"></i> Preview Report</button>
+            <button class="download-btn"><i class="fa-solid fa-download"></i> Download Report</button>
         </div>
     </div>
 </div>

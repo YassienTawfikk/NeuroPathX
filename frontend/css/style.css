@@ -1,6 +1,7 @@
 /* Variables */
 :root {
     --mainColor: #2096f3;
+    --secondColor: #4cafef;
     --bg1: rgba(184, 184, 184, 0.68);
     --bg2: rgba(255, 255, 255, 0.87);
     --bg3: rgba(255, 255, 255, 0.31);
@@ -205,7 +206,7 @@ button {
 }
 
 .upload-box.dragover {
-    border-color: #4cafef;
+    border-color: var(--secondColor);
     background-color: #222;
 }
 
@@ -231,7 +232,7 @@ button {
 }
 
 .upload-box .btn:hover {
-    background: #4cafef;
+    background: var(--secondColor);
     color: #fff;
 }
 
@@ -455,10 +456,6 @@ button {
 
 /* ========================================================================================================== */
 /* Uploaded state overrides */
-body.uploaded .start-header .title-autograph {
-    transform: translateX(calc(-50vw + 150px));
-}
-
 body.uploaded .start-header .go-to-options {
     display: flex;
     visibility: visible;
@@ -471,4 +468,104 @@ body.uploaded .upload-box {
 
 body.uploaded .scan-box {
     display: flex;
+}
+
+body.uploaded .start-header .title-autograph {
+    transform: translateX(calc(-50vw + 150px));
+}
+
+/* ========================================================================================================== */
+/* --- Layout for scan + results --- */
+.scan-results-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two equal columns */
+    gap: 20px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+/* Responsive: stack vertically on smaller screens */
+@media (max-width: 900px) {
+    .scan-results-wrapper {
+        grid-template-columns: 1fr; /* single column */
+    }
+}
+
+/* ========================================================================================================== */
+/* --- Results Box --- */
+.results-box {
+    margin: auto;
+    padding: 50px 25px;
+    border-radius: 16px;
+    background: var(--bg2);
+    color: var(--btow);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    font-family: "Arial", sans-serif;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.result-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.confidence-badge {
+    align-self: flex-start;
+    background: #e6f7ef;
+    color: #0f9d58;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 9999px; /* pill shape */
+    border: 1px solid #b3e6c8;
+}
+
+.result-summary {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.result-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.result-actions button {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.preview-btn {
+    background: #f0f4ff;
+    color: var(--mainColor);
+}
+
+.preview-btn:hover {
+    background: rgba(240, 244, 255, 0.92);
+}
+
+.download-btn {
+    background: var(--mainColor);
+    color: #fff;
+}
+
+.download-btn:hover {
+    background: var(--secondColor);
 }
