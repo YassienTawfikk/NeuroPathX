@@ -52,6 +52,7 @@ NeuroPathX/
 │
 ├── docs/                     # documentation
 │   ├── architecture.png
+│   ├── MRI_Report.pdf
 │   ├── api_spec.md
 │   └── usage_guide.md
 │
