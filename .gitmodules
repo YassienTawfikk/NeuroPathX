@@ -1,0 +1,15 @@
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:YassienTawfikk/NeuroPathX-Frontend.git
+[submodule "backend"]
+	path = backend
+	url = git@github.com:YassienTawfikk/NeuroPathX-Backend.git
+[submodule "classify-model"]
+	path = classify-model
+	url = git@github.com:YassienTawfikk/NeuroPathX-ClassifyModel.git
+[submodule "segment-model"]
+	path = segment-model
+	url = git@github.com:YassienTawfikk/NeuroPathX-SegmentModel.git
+[submodule "workflow"]
+	path = workflow
+	url = git@github.com:YassienTawfikk/NeuroPathX-Workflow.git
