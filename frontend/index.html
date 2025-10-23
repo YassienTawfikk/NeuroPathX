@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NeuroPathX</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon.png">
+
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ============================= -->
+<!-- Header -->
+<!-- ============================= -->
+<header class="start-header">
+    <h1 class="title-autograph">
+        <i class="fa-solid fa-brain"></i> NeuroPathX
+    </h1>
+    <div class="go-to-options">
+        <button class="options-btn" id="uploadBtn"><i class="fa-solid fa-cloud-arrow-up"></i></button>
+        <button class="options-btn"><i class="fa-solid fa-clock-rotate-left"></i></button>
+        <button class="options-btn"><i class="fa-solid fa-house"></i></button>
+    </div>
+</header>
+
+<!-- ============================= -->
+<!-- Upload Box -->
+<!-- ============================= -->
+<label for="file-upload" class="upload-box" id="drop-area">
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+    <span>Drag and drop file here</span>
+    <span><small>Limit 200MB per file • JPG, JPEG, PNG</small></span>
+    <span class="btn">Browse files</span>
+    <input id="file-upload" type="file" accept=".jpg,.jpeg,.png">
+</label>
+
+<!-- ============================= -->
+<!-- Scan + Results Layout -->
+<!-- ============================= -->
+<div class="scan-results-wrapper">
+
+    <!-- Scan Box -->
+    <div class="scan-box">
+        <div class="viewer-container">
+            <div class="viewer-header">
+                <h2>Scan Viewer</h2>
+                <div class="viewer-tools">
+                    <button title="Reset View" id="resetBtn">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="viewer-image">
+                <img id="scanImage" src="" alt="MRI Slice">
+            </div>
+            <div class="viewer-footer">
+                <button class="diagnose-btn">Diagnose</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Box -->
+    <div class="results-box">
+        <h2 class="result-title">Awaiting diagnosis...</h2>
+        <span class="confidence-badge">--%</span>
+        <p class="result-summary">Upload an MRI and click Diagnose to see results.</p>
+        <div class="result-actions">
+            <button class="preview-btn"><i class="fa-solid fa-eye"></i> Preview Report</button>
+            <button id="downloadReport" class="download-btn"><i class="fa-solid fa-download"></i> Download Report
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- Results Report Modal -->
+<!-- ============================= -->
+<div id="results-modal">
+    <div class="viewer">
+        <div class="modal-controls">
+            <button class="close-btn" aria-label="Close">✕</button>
+        </div>
+        <iframe title="Results PDF Viewer"></iframe>
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- Scripts -->
+<!-- ============================= -->
+<script src="js/dom.js"></script>
+<script src="js/state.js"></script>
+<script src="js/viewer.js"></script>
+<script src="js/fileHandler.js"></script>
+<script src="js/events.js"></script>
+<script src="js/results.js"></script>
+<script src="js/init.js"></script>
+
+</body>
+</html>
