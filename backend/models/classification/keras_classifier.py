@@ -1,7 +1,6 @@
-# backend/models/classification/keras_classifier.py
-
 import io
 import os
+import sys
 from pathlib import Path
 from typing import Dict, Any
 
@@ -92,7 +91,7 @@ class KerasClassifier:
     def _preprocess(self, pil_image: Image.Image) -> Any:
         """
         Applies the exact preprocessing used in the notebook: resize, convert to 
-        array, and rescale pixels to the [0, 1] range.
+        array, cast to float32, and rescale pixels to the [0, 1] range.
         """
         try:
             from tensorflow.keras.preprocessing.image import img_to_array
@@ -109,7 +108,10 @@ class KerasClassifier:
         # Convert to array (HWC)
         arr = img_to_array(pil_image)
 
-        # CRITICAL FIX: Rescale to [0, 1] (rescale=1./255 from notebook)
+        # ***CRITICAL FIX: Explicitly cast to float32 to match Keras generator output***
+        arr = arr.astype(np.float32)
+
+        # Rescale to [0, 1] (rescale=1./255 from notebook)
         arr = arr / 255.0
 
         # Add batch dimension (1,H,W,C)
@@ -119,7 +121,7 @@ class KerasClassifier:
 
     def predict_from_bytes(self, file_bytes: bytes) -> Dict[str, Any]:
         """
-        Accept raw image bytes, run prediction, and return structured results 
+        Accept raw image bytes, run prediction, and return structured results
         including all class probabilities for front-end analysis.
         """
         # Validate and open image
@@ -142,15 +144,24 @@ class KerasClassifier:
         # Process predictions
         probs = np.squeeze(preds)
 
-        # Apply Softmax if needed (though the model uses 'softmax' activation)
+        # --- DEBUG LOGGING ---
+        logger.info(f"Raw Model Output (Before Softmax Check): {preds.tolist()}")
+        # ---------------------
+
+        # Apply Softmax if needed
         if probs.ndim > 0 and (probs.min() < 0 or probs.max() > 1):
             e = np.exp(probs - np.max(probs))
             probs = e / e.sum()
 
+        # --- DEBUG LOGGING ---
+        logger.info(f"Final Probabilities (After Softmax/Squeeze): {probs.tolist()}")
+        # ---------------------
+
+        # Handle single class case (if model had only one output)
         if probs.ndim == 0:
             probs = np.array([probs])
 
-        # Find the top prediction
+        # Get the top prediction
         top_idx = int(np.argmax(probs))
         top_confidence = float(probs[top_idx])
         top_label = self.class_labels[top_idx] if top_idx < len(self.class_labels) else str(top_idx)
@@ -168,6 +179,6 @@ class KerasClassifier:
         return {
             "class": top_label,
             "confidence": top_confidence,
-            "note": "Prediction successful with notebook-aligned preprocessing.",
+            "note": "Prediction successful with fixed preprocessing. Ensure model file is correct.",
             "all_classes": full_results
         }
