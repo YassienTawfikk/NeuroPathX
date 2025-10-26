@@ -1,0 +1,5 @@
+# Backend
+fastapi
+uvicorn[standard]
+pillow
+tensorflow>=2.10
