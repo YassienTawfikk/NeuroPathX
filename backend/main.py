@@ -1,19 +1,21 @@
+# backend/main.py
+
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 import os
 import logging
 
-# Import classifier wrapper we added
+# Import classifier wrapper
 from backend.models.classification import KerasClassifier
 
 app = FastAPI(title="NeuroPathX Backend", version="0.1")
 logger = logging.getLogger("uvicorn.error")
 
-# Example PDF path (later this will be dynamically generated)
+# Example PDF path (for demonstration/placeholder)
 PDF_PATH = "docs/MRI_Report.pdf"
 
-# CORS: allow your static site (localhost / 63342) to call the API in dev
+# CORS: allow your static site to call the API in dev
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # dev-friendly; tighten later
@@ -22,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Instantiate the classifier once at startup (lazy init to surface errors early)
+# Instantiate the classifier once at startup
 try:
     classifier = KerasClassifier()
     logger.info("Keras classifier loaded successfully.")
@@ -75,7 +77,7 @@ async def mri_prediction(file: UploadFile = File(...)):
     except Exception as e:
         logger.exception("Prediction failed")
         raise HTTPException(status_code=500, detail="Prediction failed")
-    # Frontend expects keys: class, confidence, note
+    # Frontend expects keys: class, confidence, note, all_classes
     return JSONResponse(content=result)
 
 
