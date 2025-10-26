@@ -1,19 +1,13 @@
-import os
-
 # --- Model Configuration ---
-# The input size required by the Xception model (as used in the notebook)
+
+# Image size used during training (299x299 for Xception)
 IMAGE_SIZE = 299
 
-# The filename of the trained model artifact
+# Path to the saved model file
 MODEL_FILENAME = "brain_tumor_xception_model.keras"
+MODEL_PATH = MODEL_FILENAME  # Relative to the classify-model directory
 
-# Define the base directory for the package (current directory)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Full path to the model file
-MODEL_PATH = os.path.join(BASE_DIR, MODEL_FILENAME)
-
-# --- Classification Labels ---
-# These class names must be in alphabetical order as they were derived from the
-# Keras ImageDataGenerator's alphabetical indexing (glioma=0, meningioma=1, etc.)
-CLASS_LABELS = ['glioma', 'meningioma', 'notumor', 'pituitary']
+# Class labels in the order determined by the Keras generator during training.
+# The notebook output (Found X validated image filenames belonging to 4 classes) 
+# implies the generator sorted them alphabetically.
+CLASS_LABELS = ["glioma", "meningioma", "notumor", "pituitary"]
