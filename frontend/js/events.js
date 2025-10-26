@@ -120,6 +120,10 @@ diagnoseBtn.addEventListener("click", async () => {
         return;
     }
 
+    // New: Disable button and add visual feedback while fetching
+    diagnoseBtn.disabled = true;
+    diagnoseBtn.classList.add("disabled");
+
     const file = inputFile.files[0];
     const formData = new FormData();
     formData.append("file", file);
@@ -147,5 +151,9 @@ diagnoseBtn.addEventListener("click", async () => {
     } catch (err) {
         console.error("❌ API error:", err);
         alert("Something went wrong while contacting the server.");
+    } finally {
+        // New: Ensure button is re-enabled whether success or failure
+        diagnoseBtn.disabled = false;
+        diagnoseBtn.classList.remove("disabled");
     }
 });

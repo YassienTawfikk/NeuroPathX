@@ -90,29 +90,34 @@ class KerasClassifier:
             raise
 
     def _preprocess(self, pil_image: Image.Image) -> Any:
-        # Lazily import Keras preprocessing and Xception preprocess_input
+        # Lazily import Keras preprocessing
         try:
             from tensorflow.keras.preprocessing.image import img_to_array
-            from tensorflow.keras.applications.xception import preprocess_input as xception_preprocess
+            # NOTE: We DO NOT import Xception's preprocess_input.
+            # We must use simple rescaling (0-1) as seen in the training notebook.
         except Exception as e:
             raise RuntimeError("TensorFlow/Keras is required for image preprocessing. Install tensorflow.") from e
 
         if pil_image.mode != "RGB":
             pil_image = pil_image.convert("RGB")
+
+        # Resize the image
         pil_image = pil_image.resize((self.image_size, self.image_size))
-        arr = img_to_array(pil_image)  # HWC
-        arr = np.expand_dims(arr, axis=0)  # 1,H,W,C
-        arr = xception_preprocess(arr)
+
+        # Convert to array (HWC)
+        arr = img_to_array(pil_image)
+
+        # Normalize/Rescale to [0, 1] (as per the training notebook: img_input / 255.0)
+        arr = arr / 255.0
+
+        # Expand dimensions (1,H,W,C)
+        arr = np.expand_dims(arr, axis=0)
+
         return arr
 
     def predict_from_bytes(self, file_bytes: bytes) -> Dict[str, Any]:
         """
-        Accept raw image bytes and return:
-        {
-          "class": "<label>",
-          "confidence": 0.87,
-          "note": "Optional note"
-        }
+        Accept raw image bytes and return the top prediction and all class probabilities.
         """
         # Validate and open image
         try:
@@ -127,29 +132,42 @@ class KerasClassifier:
 
         # Predict
         try:
-            preds = self._model.predict(x)
+            # Setting verbose=0 to match the notebook's prediction style
+            preds = self._model.predict(x, verbose=0)
         except Exception as e:
             logger.exception("Model prediction failed")
             raise RuntimeError("Model prediction failed") from e
 
-        # Normalize predictions
+        # Normalize and process predictions
         probs = np.squeeze(preds)
-        if probs.ndim == 0:
-            # Single-value output -> treat as score for one class
-            top_idx = 0
-            confidence = float(probs)
-            label = self.class_labels[0] if self.class_labels else "class_0"
-        else:
-            # If outputs are not in [0,1], apply softmax
-            if probs.min() < 0 or probs.max() > 1:
-                e = np.exp(probs - np.max(probs))
-                probs = e / e.sum()
-            top_idx = int(np.argmax(probs))
-            confidence = float(probs[top_idx])
-            label = self.class_labels[top_idx] if top_idx < len(self.class_labels) else str(top_idx)
 
+        # If the model didn't use softmax in the final layer, apply it here
+        if probs.ndim > 0 and (probs.min() < 0 or probs.max() > 1):
+            e = np.exp(probs - np.max(probs))
+            probs = e / e.sum()
+
+        # Handle single class case (rare for this model)
+        if probs.ndim == 0:
+            probs = np.array([probs])
+
+        # Get the top prediction
+        top_idx = int(np.argmax(probs))
+        top_confidence = float(probs[top_idx])
+        top_label = self.class_labels[top_idx] if top_idx < len(self.class_labels) else str(top_idx)
+
+        # Build the list of all class results for the frontend
+        full_results = []
+        for i, label in enumerate(self.class_labels):
+            if i < len(probs):
+                full_results.append({
+                    "label": label,
+                    "confidence": float(probs[i]),
+                })
+
+        # Return the comprehensive result dictionary
         return {
-            "class": label,
-            "confidence": confidence,
-            "note": "Predicted by Xception classifier"
+            "class": top_label,
+            "confidence": top_confidence,
+            "note": "Predicted by Xception classifier",
+            "all_classes": full_results
         }
