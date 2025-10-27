@@ -1,7 +1,35 @@
-// events.js
+function loadSampleFile(url) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error(`Failed to fetch sample: ${response.statusText}`);
+            return response.blob();
+        })
+        .then(blob => {
+            const fileName = url.substring(url.lastIndexOf('/') + 1);
+            const file = new File([blob], fileName, {type: blob.type});
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+
+            inputFile.files = dataTransfer.files;
+            handleFile(file);
+        })
+        .catch(error => {
+            console.error("❌ Error loading sample file:", error);
+            inputFile.click();
+        });
+}
 
 // --- File upload ---
-uploadBtn.addEventListener("click", () => inputFile.click());
+uploadBtn.addEventListener("click", () => {
+    // New Logic: If no file is loaded, load a sample file automatically.
+    if (inputFile.files.length === 0) {
+        // NOTE: Ensure 'sample_glioma.jpg' exists and is served from this path on your server.
+        loadSampleFile("data/test_samples/glioma/sample_glioma.jpg");
+    } else {
+        inputFile.click();
+    }
+});
 inputFile.addEventListener("change", (e) => {
     if (e.target.files.length) handleFile(e.target.files[0]);
 });
@@ -116,11 +144,11 @@ img.addEventListener("contextmenu", (e) => e.preventDefault());
 // --- Diagnose button → API call ---
 diagnoseBtn.addEventListener("click", async () => {
     if (!inputFile.files.length) {
-        alert("Please upload an MRI image first.");
+        // Use a custom message box instead of alert()
+        console.error("Please upload an MRI image first.");
         return;
     }
 
-    // New: Disable button and add visual feedback while fetching
     diagnoseBtn.disabled = true;
     diagnoseBtn.classList.add("disabled");
 
@@ -137,22 +165,19 @@ diagnoseBtn.addEventListener("click", async () => {
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         const result = await response.json();
 
-        // ✅ Update placeholders with backend response
         document.querySelector(".result-title").textContent = `Tumor type: ${result.class}`;
         document.querySelector(".confidence-badge").textContent = `${(result.confidence * 100).toFixed(2)}% confidence`;
         document.querySelector(".result-summary").textContent = result.note || "No summary available.";
 
-        // Show results
         resultsBox.style.display = "flex";
         resultsWrapper.style.display = "grid";
 
-        // Save state
         sessionStorage.setItem("resultsVisible", "true");
     } catch (err) {
         console.error("❌ API error:", err);
-        alert("Something went wrong while contacting the server.");
+        // Use a custom message box instead of alert()
+        console.error("Something went wrong while contacting the server.");
     } finally {
-        // New: Ensure button is re-enabled whether success or failure
         diagnoseBtn.disabled = false;
         diagnoseBtn.classList.remove("disabled");
     }

@@ -1,86 +1,74 @@
 import io
 import os
-import sys
 from pathlib import Path
 from typing import Dict, Any
 
 from PIL import Image
 import numpy as np
-import importlib.util
 import logging
+
+# --- CRITICAL CHANGE: Direct Import of Local Config ---
+# We now import configuration variables directly from the new config.py in the same package
+try:
+    from .config import IMAGE_SIZE, MODEL_PATH, CLASS_LABELS
+except ImportError:
+    # Define fallback defaults if config is missing (for robust startup)
+    IMAGE_SIZE = 299
+    MODEL_PATH = "artifacts/classification/brain_tumor_xception_model.keras"  # Assume new location
+    CLASS_LABELS = ["glioma", "meningioma", "notumor", "pituitary"]
+    logging.warning("Failed to import config.py. Using hardcoded defaults.")
+# ------------------------------------------------------
 
 logger = logging.getLogger(__name__)
 
 
-def _load_classify_model_config() -> Dict[str, Any]:
+def _resolve_model_path(relative_path: str) -> str:
     """
-    Dynamically loads the configuration from classify-model/config.py, 
-    allowing model details (like IMAGE_SIZE and CLASS_LABELS) to be defined centrally.
+    Resolves the model path relative to the project root.
+    It walks up from the current file until it finds the project root marker (e.g., README.md).
     """
-    # Defaults
-    defaults = {
-        "IMAGE_SIZE": 299,
-        "MODEL_PATH": os.path.join("classify-model", "brain_tumor_xception_model.keras"),
-        "CLASS_LABELS": ["glioma", "meningioma", "notumor", "pituitary"],
-    }
-
     # Strategy: locate the repo root by walking up from this file's location
     current = Path(__file__).resolve()
     repo_root = current
+    # Search up to 6 levels for the project root (NeuroPathX/)
     for _ in range(6):
         if (repo_root / "README.md").exists() or (repo_root / ".git").exists():
             break
         repo_root = repo_root.parent
 
-    config_path = repo_root / "classify-model" / "config.py"
+    # Resolve the path relative to the found repo root
+    absolute_path = (repo_root / relative_path).resolve()
 
-    if not config_path.exists():
-        logger.warning(f"Config file not found. Using defaults: {defaults}")
-        return defaults
-
-    try:
-        spec = importlib.util.spec_from_file_location("classify_model_config", str(config_path))
-        module = importlib.util.module_from_spec(spec)
-        loader = spec.loader
-        assert loader is not None
-        loader.exec_module(module)
-
-        # Load values from config.py module
-        IMAGE_SIZE = getattr(module, "IMAGE_SIZE", defaults["IMAGE_SIZE"])
-        MODEL_PATH = getattr(module, "MODEL_PATH", defaults["MODEL_PATH"])
-        CLASS_LABELS = getattr(module, "CLASS_LABELS", defaults["CLASS_LABELS"])
-
-        # Resolve MODEL_PATH relative to repo root
-        if not os.path.isabs(MODEL_PATH):
-            # Assumes MODEL_PATH is defined relative to the classify-model directory
-            MODEL_PATH = str((repo_root / "classify-model" / MODEL_PATH).resolve())
-
-        return {"IMAGE_SIZE": IMAGE_SIZE, "MODEL_PATH": MODEL_PATH, "CLASS_LABELS": CLASS_LABELS}
-    except Exception as e:
-        logger.exception("Failed to load classify-model config; falling back to defaults.")
-        return defaults
+    return str(absolute_path)
 
 
 class KerasClassifier:
     def __init__(self, model_path: str = None, image_size: int = None, class_labels=None, device: str = None):
-        config = _load_classify_model_config()
-        self.model_path = model_path or config["MODEL_PATH"]
-        self.image_size = image_size or config["IMAGE_SIZE"]
-        self.class_labels = class_labels or config["CLASS_LABELS"]
+        # Use imported constants as defaults
+        self.image_size = image_size or IMAGE_SIZE
+        self.class_labels = class_labels or CLASS_LABELS
+
+        # Resolve path: use the user-provided path or the path from config.py
+        effective_model_path = model_path or MODEL_PATH
+        self.model_path = _resolve_model_path(effective_model_path)
+
         self._model = None
         self._loaded = False
+        logger.info(f"KerasClassifier initialized. Will load model from: {self.model_path}")
 
     def _load_model(self):
         """Loads the Keras model lazily."""
         if self._loaded:
             return
         try:
+            # We delay the TF import to allow the class to be instantiated without TF being installed
             import tensorflow as tf
             from tensorflow.keras.models import load_model
 
             if not os.path.exists(self.model_path):
                 raise FileNotFoundError(f"Model file not found at: {self.model_path}")
 
+            # Ensure Keras/TF knows where to load the model
             self._model = load_model(self.model_path, compile=False)
             self._loaded = True
             logger.info("Keras model loaded successfully.")
@@ -90,7 +78,7 @@ class KerasClassifier:
 
     def _preprocess(self, pil_image: Image.Image) -> Any:
         """
-        Applies the exact preprocessing used in the notebook: resize, convert to 
+        Applies the exact preprocessing used in the notebook: resize, convert to
         array, cast to float32, and rescale pixels to the [0, 1] range.
         """
         try:
@@ -102,7 +90,7 @@ class KerasClassifier:
         if pil_image.mode != "RGB":
             pil_image = pil_image.convert("RGB")
 
-        # Resize to 299x299
+        # Resize to target size
         pil_image = pil_image.resize((self.image_size, self.image_size))
 
         # Convert to array (HWC)
@@ -144,18 +132,10 @@ class KerasClassifier:
         # Process predictions
         probs = np.squeeze(preds)
 
-        # --- DEBUG LOGGING ---
-        logger.info(f"Raw Model Output (Before Softmax Check): {preds.tolist()}")
-        # ---------------------
-
-        # Apply Softmax if needed
+        # Apply Softmax if needed (this should ideally be handled by the model's output)
         if probs.ndim > 0 and (probs.min() < 0 or probs.max() > 1):
             e = np.exp(probs - np.max(probs))
             probs = e / e.sum()
-
-        # --- DEBUG LOGGING ---
-        logger.info(f"Final Probabilities (After Softmax/Squeeze): {probs.tolist()}")
-        # ---------------------
 
         # Handle single class case (if model had only one output)
         if probs.ndim == 0:
