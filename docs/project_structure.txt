@@ -4,64 +4,70 @@ NeuroPathX: Brain Tumor Classification Project Structure
 /
 ├── artifacts/
 │   ├── classification/
-│   │   └── brain_tumor_xception_model.keras  # The final, optimized Keras model (Xception-based) artifact.
-│   └── .gitkeep                            # Placeholder to ensure the directory is tracked by Git.
+│   │   └── brain_tumor_xception_model.keras
+│   └── .gitkeep
 |
 ├── backend/
-│   ├── models/ # Contains the core machine learning logic.
-│   │   ├── classification/ # Specific modules for the classification task.
-│   │   │   ├── __init__.py                 # Makes 'classification' a Python package.
-│   │   │   ├── config.py                   # Configuration variables (e.g., model paths, hyperparameters).
-│   │   │   └── keras_classifier.py         # Main class/functions for loading and running the Keras model.
-│   └── main.py                             # The primary entry point for the backend API (e.g., FastAPI/Flask).
+│   ├── models/
+│   │   ├── classification/
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   └── keras_classifier.py
+│   │   ├── report/
+│   │   │   ├── clinical_data_config.json
+│   │   │   ├── report_generator.py
+│   │   │   └── report_theme.json
+│   └── main.py
 |
 ├── data/
-│   ├── classification_samples/ # Sample or small-scale dataset for quick testing/development.
-│   │   ├── glioma                          # Images of Glioma tumors.
-│   │   ├── meningioma                      # Images of Meningioma tumors.
-│   │   ├── notumor                         # Images of non-tumor (healthy) brains.
-│   │   └── pituitary                       # Images of Pituitary tumors.
-│   └── .gitkeep                            # Placeholder for the data directory.
+│   ├── classification_samples/
+│   │   ├── glioma_tumor/
+│   │   │   ├── NPX-001.jpg
+│   │   │   └── ...
+│   │   ├── healthy_control/
+│   │   │   ├── NPX-001.jpg
+│   │   │   └── ...
+│   │   ├── meningioma_tumor/
+│   │   │   ├── NPX-001.jpg
+│   │   │   └── ...
+│   │   └── pituitary_tumor/
+│   │       ├── NPX-001.jpg
+│   │       └── ...
+│   └── .gitkeep
 |
 ├── docs/
-│   └── project_structure.txt               # Documentation file for the project layout (this file).
+│   └── project_structure.txt
 |
 ├── frontend/
 │   ├── assets/
-│   │   └── favicon.png                     # Browser icon for the web application.
-│   ├── css/ # Stylesheets for the user interface.
-│   │   ├── normalize.css                   # Resets/normalizes CSS across browsers.
-│   │   └── style.css                       # Custom project styles.
-│   ├── js/ # JavaScript modules for the web application's logic.
-│   │   ├── dom.js                          # Functions for manipulating the Document Object Model (DOM).
-│   │   ├── events.js                       # Handles user interactions and event listeners.
-│   │   ├── fileHandler.js                  # Logic for handling file uploads (e.g., MRI image).
-│   │   ├── init.js                         # Application initialization scripts.
-│   │   ├── results.js                      # Logic for displaying classification results.
-│   │   ├── state.js                        # Manages the application's client-side state.
-│   │   └── viewer.js                       # Logic for viewing the uploaded image.
-│   ├── index.html                          # The main HTML file for the web interface.
-│   └── README.md                           # Frontend-specific documentation.
+│   │   └── favicon.png
+│   ├── css/
+│   │   ├── normalize.css
+│   │   └── style.css
+│   ├── js/
+│   │   ├── clinicalData.js
+│   │   ├── dom.js
+│   │   ├── events.js
+│   │   ├── fileHandler.js
+│   │   ├── init.js
+│   │   ├── results.js
+│   │   ├── state.js
+│   │   └── viewer.js
+│   ├── index.html
+│   └── README.md
 |
 ├── notebooks/
-│   └── xception-for-brain-mri-tumor-classification.ipynb  # Jupyter notebook for model development, training, and experimentation.
+│   └── xception-for-brain-mri-tumor-classification.ipynb
 |
 ├── reports/
-│   ├── classification_model/ # Detailed results and visualizations of the model performance.
-│   │   ├── __results___21_1.png            # Specific result visualization (e.g., training run 21, part 1).
-│   │   ├── ...                             # Other run-specific results.
-│   │   ├── classification_report.txt       # Text-based report (precision, recall, F1-score).
-│   │   ├── confusion_matrix.png            # Visual representation of model errors/successes.
-│   │   ├── model_architecture.png          # Visual graph of the Xception model structure.
-│   │   ├── sampled_processed_images.png    # Examples of images after pre-processing.
-│   │   ├── test_data_division.png          # Visualization of test dataset class distribution.
-│   │   ├── training_data_division.png      # Visualization of training dataset class distribution.
-│   │   └── training_metrics_plot.png       # Plot of loss and accuracy over training epochs.
-│   └── .gitkeep                            # Placeholder for the reports directory.
+│   ├── classification_model/
+│   │   ├── ...
+│   │   └── training_metrics_plot.png
+│   └── .gitkeep
 |
 ├── specs/
-│   └── test_mri_prediction.py              # Unit or integration tests for the MRI prediction logic.
+│   └── test_mri_prediction.py
 |
-├── .gitignore                              # Specifies files and folders that Git should ignore.
-├── README.md                               # Main project overview, setup, and usage instructions.
-└── requirements.txt                        # List of Python dependencies (libraries) for the project.
+├── .gitignore
+├── README.md
+└── requirements.txt
