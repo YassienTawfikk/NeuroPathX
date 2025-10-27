@@ -6,6 +6,7 @@ const resetBtn = document.getElementById("resetBtn");
 const uploadBtn = document.getElementById("uploadBtn");
 const homeBtn = document.querySelector(".go-to-options .options-btn:nth-child(3)");
 const diagnoseBtn = document.querySelector(".diagnose-btn");
+const globalLoader = document.getElementById("global-loader");
 
 const resultsWrapper = document.querySelector(".scan-results-wrapper");
 const resultsBox = document.querySelector(".results-box");
