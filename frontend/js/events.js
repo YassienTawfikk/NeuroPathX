@@ -154,6 +154,8 @@ diagnoseBtn.addEventListener("click", async () => {
         return;
     }
 
+    // 1. Show Loader and Disable Button
+    globalLoader.classList.add("show");
     diagnoseBtn.disabled = true;
     diagnoseBtn.classList.add("disabled");
 
@@ -183,6 +185,8 @@ diagnoseBtn.addEventListener("click", async () => {
         // Use a custom message box instead of alert()
         console.error("Something went wrong while contacting the server.");
     } finally {
+        // 2. Hide Loader and Enable Button
+        globalLoader.classList.remove("show");
         diagnoseBtn.disabled = false;
         diagnoseBtn.classList.remove("disabled");
     }
