@@ -68,6 +68,9 @@ NeuroPathX: Brain Tumor Classification Project Structure
 ├── specs/
 │   └── test_mri_prediction.py
 |
+├── docs/
+│   └── project_structure.txt
+|
 ├── .gitignore
 ├── README.md
 └── requirements.txt
