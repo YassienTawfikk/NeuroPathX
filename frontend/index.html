@@ -4,28 +4,21 @@
     <meta charset="UTF-8">
     <title>NeuroPathX</title>
 
-    <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
     <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon.png">
 
-    <!-- Core Styles -->
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Icons -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- ============================= -->
-<!-- Header -->
-<!-- ============================= -->
 <header class="start-header">
     <h1 class="title-autograph">
         <i class="fa-solid fa-brain"></i> NeuroPathX
@@ -37,9 +30,6 @@
     </div>
 </header>
 
-<!-- ============================= -->
-<!-- Upload Box -->
-<!-- ============================= -->
 <label for="file-upload" class="upload-box" id="drop-area">
     <i class="fa-solid fa-cloud-arrow-up"></i>
     <span>Drag and drop file here</span>
@@ -48,12 +38,8 @@
     <input id="file-upload" type="file" accept=".jpg,.jpeg,.png">
 </label>
 
-<!-- ============================= -->
-<!-- Scan + Results Layout -->
-<!-- ============================= -->
 <div class="scan-results-wrapper">
 
-    <!-- Scan Box -->
     <div class="scan-box">
         <div class="viewer-container">
             <div class="viewer-header">
@@ -73,11 +59,21 @@
         </div>
     </div>
 
-    <!-- Results Box -->
     <div class="results-box">
-        <h2 class="result-title">Awaiting diagnosis...</h2>
-        <span class="confidence-badge">--%</span>
-        <p class="result-summary">Upload an MRI and click Diagnose to see results.</p>
+        <h2 class="result-title" id="clinical-title">Awaiting diagnosis...</h2>
+
+        <span class="confidence-badge" id="confidence-badge">--%</span>
+
+        <p class="result-summary" id="clinical-description">Upload an MRI and click Diagnose to see results.</p>
+
+        <p class="result-action" id="clinical-action"></p>
+
+        <div class="all-classes-list">
+            <h4>Model Probability Scores:</h4>
+            <ul id="probability-list">
+            </ul>
+        </div>
+
         <div class="result-actions">
             <button class="preview-btn"><i class="fa-solid fa-eye"></i> Preview Report</button>
             <button id="downloadReport" class="download-btn"><i class="fa-solid fa-download"></i> Download Report
@@ -87,9 +83,6 @@
 
 </div>
 
-<!-- ============================= -->
-<!-- Results Report Modal -->
-<!-- ============================= -->
 <div id="results-modal">
     <div class="viewer">
         <div class="modal-controls">
@@ -99,16 +92,15 @@
     </div>
 </div>
 
-<!-- ============================= -->
-<!-- Scripts -->
-<!-- ============================= -->
 <script src="js/dom.js"></script>
 <script src="js/state.js"></script>
 <script src="js/viewer.js"></script>
 <script src="js/fileHandler.js"></script>
-<script src="js/events.js"></script>
-<script src="js/results.js"></script>
 <script src="js/init.js"></script>
+
+<script src="js/clinicalData.js" type="module"></script>
+<script src="js/results.js" type="module"></script>
+<script src="js/events.js" type="module"></script>
 
 </body>
 </html>

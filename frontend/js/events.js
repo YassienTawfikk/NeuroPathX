@@ -1,3 +1,8 @@
+// events.js
+
+// CRITICAL FIX: Import the display function from results.js
+import {displayPredictionResults} from './results.js';
+
 function loadSampleFile(url) {
     fetch(url)
         .then(response => {
@@ -165,9 +170,9 @@ diagnoseBtn.addEventListener("click", async () => {
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         const result = await response.json();
 
-        document.querySelector(".result-title").textContent = `Tumor type: ${result.class}`;
-        document.querySelector(".confidence-badge").textContent = `${(result.confidence * 100).toFixed(2)}% confidence`;
-        document.querySelector(".result-summary").textContent = result.note || "No summary available.";
+        // Call the imported function to display the rich results
+        displayPredictionResults(result);
+        // Note: The visibility is handled by this function
 
         resultsBox.style.display = "flex";
         resultsWrapper.style.display = "grid";
