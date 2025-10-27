@@ -1,0 +1,26 @@
+{
+  "Glioma Tumor": {
+    "title": "Suspected High-Grade Glioma",
+    "description_prefix": "Gliomas typically present with irregular, enhancing borders, often requiring immediate intervention.",
+    "color": "#FF0000",
+    "rec_text": "Immediate neuro-oncology consult for surgical and therapeutic pathway planning."
+  },
+  "Meningioma Tumor": {
+    "title": "Presumed Benign Meningioma",
+    "description_prefix": "Meningiomas are generally slow-growing tumors originating from the meninges. Surveillance is key unless neurological symptoms are evident.",
+    "color": "#00CC00",
+    "rec_text": "Follow-up MRI surveillance is often appropriate, though surgical resection may be indicated based on size and symptom severity."
+  },
+  "Pituitary Tumor": {
+    "title": "Pituitary Adenoma / Sellar Mass",
+    "description_prefix": "Pituitary adenomas require evaluation for hormonal activity and proximity to the optic chiasm. They are typically treated pharmacologically or surgically.",
+    "color": "#FFA500",
+    "rec_text": "Endocrinology and neurosurgery consultations required for hormonal analysis and management."
+  },
+  "No Tumor": {
+    "title": "Non-Pathological Scan Result",
+    "description_prefix": "No definitive primary brain tumor evidence was detected by the model. The scan is radiologically unremarkable for the targeted pathologies.",
+    "color": "#0000FF",
+    "rec_text": "Continue routine patient care. Repeat imaging as clinically indicated if symptoms persist."
+  }
+}
