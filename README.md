@@ -93,8 +93,16 @@ Main libraries: TensorFlow, FastAPI, NumPy, scikit-learn, Pillow
 │   └── xception-for-brain-mri-tumor-classification.ipynb
 ├── reports/
 │   └── training_metrics_plot.png
+├── test/
+│   └── classification_samples/
+│       ├── giloma_tumor/
+│       ├── healthy_control/
+│       ├── meningioma_tumor/
+│       └── pituitary_tumor/
 └── requirements.txt
 ```
+
+> The test/ directory includes sample brain MRI images for validating the model’s predictions and testing the inference pipeline end-to-end.
 
 ---
 
