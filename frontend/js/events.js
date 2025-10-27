@@ -146,7 +146,7 @@ img.addEventListener("mousedown", (e) => {
 });
 img.addEventListener("contextmenu", (e) => e.preventDefault());
 
-// --- Diagnose button → API call ---
+// --- Diagnose button → API call with Loader Integration ---
 diagnoseBtn.addEventListener("click", async () => {
     if (!inputFile.files.length) {
         // Use a custom message box instead of alert()
