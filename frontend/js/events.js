@@ -146,7 +146,7 @@ img.addEventListener("mousedown", (e) => {
 });
 img.addEventListener("contextmenu", (e) => e.preventDefault());
 
-// --- Diagnose button → API call ---
+// --- Diagnose button → API call with Loader Integration ---
 diagnoseBtn.addEventListener("click", async () => {
     if (!inputFile.files.length) {
         // Use a custom message box instead of alert()
@@ -154,6 +154,8 @@ diagnoseBtn.addEventListener("click", async () => {
         return;
     }
 
+    // 1. Show Loader and Disable Button
+    globalLoader.classList.add("show");
     diagnoseBtn.disabled = true;
     diagnoseBtn.classList.add("disabled");
 
@@ -183,6 +185,8 @@ diagnoseBtn.addEventListener("click", async () => {
         // Use a custom message box instead of alert()
         console.error("Something went wrong while contacting the server.");
     } finally {
+        // 2. Hide Loader and Enable Button
+        globalLoader.classList.remove("show");
         diagnoseBtn.disabled = false;
         diagnoseBtn.classList.remove("disabled");
     }
