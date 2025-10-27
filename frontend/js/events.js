@@ -104,11 +104,10 @@ img.addEventListener("wheel", (e) => {
     if (e.ctrlKey) {
         e.preventDefault();
         scale += e.deltaY * -0.01;
-        scale = Math.min(Math.max(1, scale), 5);
+        scale = Math.min(Math.max(0.8, scale), 5);
         updateTransform();
     }
 });
-
 // Pan with mouse drag
 img.addEventListener("mousedown", (e) => {
     isDragging = true;
