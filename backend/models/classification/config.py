@@ -5,4 +5,4 @@ IMAGE_SIZE = 299
 MODEL_PATH = "artifacts/classification/brain_tumor_xception_model.keras"
 
 # Class labels in the order determined by the Keras generator during training.
-CLASS_LABELS = ["glioma", "meningioma", "notumor", "pituitary"]
+CLASS_LABELS = ["Glioma Tumor", "Meningioma Tumor", "No Tumor", "Pituitary Tumor"]
