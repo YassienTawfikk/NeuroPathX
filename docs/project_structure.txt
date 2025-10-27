@@ -1,61 +1,67 @@
-NeuroPathX/
-│
-├── backend/                  # FastAPI app + model serving
-│   ├── main.py               # entrypoint (uvicorn runs this)
-│   ├── models/               # model loaders + inference code
-│   │   ├── classification/
-│   │   └── segmentation/
-│   ├── utils/                # preprocessing, postprocessing helpers
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/                 # user-facing web app
-│   │
-│   ├── index.html            # landing/upload page
-│   │
-│   ├── css/
-│   │   ├── normalize.js      # normalize methods
-│   │   └── style.css         # all styling rules
-│   │
-│   │── js/
-│   │   ├── dom.js         # all element lookups
-│   │   ├── state.js       # global state + constants
-│   │   ├── viewer.js      # zoom, pan, brightness, contrast
-│   │   ├── fileHandler.js # upload, drag & drop, restore
-│   │   ├── events.js      # event listeners
-│   │   ├── results.js     # diagnose + modal handling
-│   │   └── init.js        # initialize on load
-│   │
+NeuroPathX: Brain Tumor Classification Project Structure
+======================================================
+
+/
+├── artifacts/
+│   ├── classification/
+│   │   └── brain_tumor_xception_model.keras  # The final, optimized Keras model (Xception-based) artifact.
+│   └── .gitkeep                            # Placeholder to ensure the directory is tracked by Git.
+|
+├── backend/
+│   ├── models/ # Contains the core machine learning logic.
+│   │   ├── classification/ # Specific modules for the classification task.
+│   │   │   ├── __init__.py                 # Makes 'classification' a Python package.
+│   │   │   ├── config.py                   # Configuration variables (e.g., model paths, hyperparameters).
+│   │   │   └── keras_classifier.py         # Main class/functions for loading and running the Keras model.
+│   └── main.py                             # The primary entry point for the backend API (e.g., FastAPI/Flask).
+|
+├── data/
+│   ├── classification_samples/ # Sample or small-scale dataset for quick testing/development.
+│   │   ├── glioma                          # Images of Glioma tumors.
+│   │   ├── meningioma                      # Images of Meningioma tumors.
+│   │   ├── notumor                         # Images of non-tumor (healthy) brains.
+│   │   └── pituitary                       # Images of Pituitary tumors.
+│   └── .gitkeep                            # Placeholder for the data directory.
+|
+├── docs/
+│   └── project_structure.txt               # Documentation file for the project layout (this file).
+|
+├── frontend/
 │   ├── assets/
-│   │   └── favicon.png        # branding/favicon
-│   │
-│   └── README.md           # explain how to run the frontend (open in browser, or later hook to backend)
-│
-├── workflow/                 # n8n (or other) automation flows
-│   ├── brain_tumor_flow.json # exported workflow
-│   └── README.md             # describe how to import/run
-│
-├── reports/                  # reporting system
-│   ├── templates/            # PDF/Word templates
-│   └── generators/           # code to fill templates
-│
-├── notebooks/                # experiments, training, EDA
-│   ├── classification.ipynb
-│   ├── segmentation.ipynb
-│   └── preprocessing.ipynb
-│
-├── data/                     # keep this git ignored
-│   └── sample_images/        # a few test MRIs for demo
-│
-├── tests/                    # pytest / integration tests
-│   └── test_api.py
-│
-├── docs/                     # documentation
-│   ├── architecture.png
-│   ├── MRI_Report.pdf
-│   ├── api_spec.md
-│   └── usage_guide.md
-│
-├── docker-compose.yml        # orchestrate backend + frontend + db
-├── README.md                 # main project overview
-└── .gitignore
+│   │   └── favicon.png                     # Browser icon for the web application.
+│   ├── css/ # Stylesheets for the user interface.
+│   │   ├── normalize.css                   # Resets/normalizes CSS across browsers.
+│   │   └── style.css                       # Custom project styles.
+│   ├── js/ # JavaScript modules for the web application's logic.
+│   │   ├── dom.js                          # Functions for manipulating the Document Object Model (DOM).
+│   │   ├── events.js                       # Handles user interactions and event listeners.
+│   │   ├── fileHandler.js                  # Logic for handling file uploads (e.g., MRI image).
+│   │   ├── init.js                         # Application initialization scripts.
+│   │   ├── results.js                      # Logic for displaying classification results.
+│   │   ├── state.js                        # Manages the application's client-side state.
+│   │   └── viewer.js                       # Logic for viewing the uploaded image.
+│   ├── index.html                          # The main HTML file for the web interface.
+│   └── README.md                           # Frontend-specific documentation.
+|
+├── notebooks/
+│   └── xception-for-brain-mri-tumor-classification.ipynb  # Jupyter notebook for model development, training, and experimentation.
+|
+├── reports/
+│   ├── classification_model/ # Detailed results and visualizations of the model performance.
+│   │   ├── __results___21_1.png            # Specific result visualization (e.g., training run 21, part 1).
+│   │   ├── ...                             # Other run-specific results.
+│   │   ├── classification_report.txt       # Text-based report (precision, recall, F1-score).
+│   │   ├── confusion_matrix.png            # Visual representation of model errors/successes.
+│   │   ├── model_architecture.png          # Visual graph of the Xception model structure.
+│   │   ├── sampled_processed_images.png    # Examples of images after pre-processing.
+│   │   ├── test_data_division.png          # Visualization of test dataset class distribution.
+│   │   ├── training_data_division.png      # Visualization of training dataset class distribution.
+│   │   └── training_metrics_plot.png       # Plot of loss and accuracy over training epochs.
+│   └── .gitkeep                            # Placeholder for the reports directory.
+|
+├── specs/
+│   └── test_mri_prediction.py              # Unit or integration tests for the MRI prediction logic.
+|
+├── .gitignore                              # Specifies files and folders that Git should ignore.
+├── README.md                               # Main project overview, setup, and usage instructions.
+└── requirements.txt                        # List of Python dependencies (libraries) for the project.
