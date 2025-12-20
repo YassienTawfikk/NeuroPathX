@@ -13,6 +13,16 @@ from backend.models.report.report_generator import generate_pdf_report
 app = FastAPI(title="NeuroPathX Backend", version="0.1")
 logger = logging.getLogger("uvicorn.error")
 
+# --- DEBUG: Force Eager Execution ---
+# This often resolves Keras 3 graph construction issues with older or malformed models
+try:
+    import tensorflow as tf
+    tf.config.run_functions_eagerly(True)
+    logger.info("Eager execution enabled.")
+except ImportError:
+    pass
+# ------------------------------------
+
 # Example PDF path (for demonstration/placeholder)
 PDF_PATH = "docs/MRI_Report.pdf"
 
