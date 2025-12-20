@@ -462,17 +462,21 @@ body.uploaded .start-header .title-autograph {
 
 /* ========================================================================================================== */
 /* Results Modal */
-#results-modal {
+/* ========================================================================================================== */
+/* Results Modal & Finder Modal (Shared) */
+.modal {
     position: fixed;
     inset: 0;
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.4);
+    /* Slight dim */
+    backdrop-filter: blur(5px);
     z-index: 1200;
 }
 
-#results-modal.show {
+.modal.show {
     display: flex;
 }
 
@@ -487,6 +491,245 @@ body.uploaded .start-header .title-autograph {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     overflow: hidden;
 }
+
+/* ========================================================================================================== */
+/* Finder Style Explorer */
+
+.finder-window {
+    width: 800px;
+    height: 500px;
+    background: #f5f5f7;
+    /* macOS light gray */
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #333;
+    animation: popIn 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    .finder-window {
+        background: #1e1e1e;
+        color: #fff;
+        border: 1px solid #333;
+    }
+}
+
+/* Header (Traffic Lights) */
+.finder-header {
+    height: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    position: relative;
+}
+
+@media (prefers-color-scheme: dark) {
+    .finder-header {
+        background: rgba(40, 40, 40, 0.9);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.finder-controls {
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.close-dots {
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+    /* Prevent squashing */
+    min-height: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    /* Critical: remove default button padding */
+    appearance: none;
+    /* Remove OS specific styling */
+    -webkit-appearance: none;
+    display: inline-block;
+}
+
+.close-dots.red {
+    background: #ff5f56;
+}
+
+.close-dots.yellow {
+    background: #ffbd2e;
+}
+
+.close-dots.green {
+    background: #27c93f;
+}
+
+.close-dots:hover {
+    opacity: 0.8;
+}
+
+.finder-title {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: inherit;
+    pointer-events: none;
+}
+
+/* Navigation Bar (Breadcrumbs) */
+.finder-nav {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    background: rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    gap: 5px;
+    overflow-x: auto;
+}
+
+.crumb-btn {
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.crumb-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000;
+}
+
+.crumb-btn.active {
+    font-weight: 600;
+    color: #007aff;
+}
+
+.crumb-separator {
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .crumb-btn {
+        color: #aaa;
+    }
+
+    .crumb-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .crumb-btn.active {
+        color: #0a84ff;
+    }
+}
+
+/* Content Area (Grid) */
+.finder-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-auto-rows: 110px;
+    gap: 15px;
+}
+
+.finder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+    text-align: center;
+}
+
+.finder-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.finder-item.folder-item:hover {
+    background: rgba(0, 122, 255, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    .finder-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.finder-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+    color: #87ceeb;
+    /* Folder Blue */
+}
+
+.finder-thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.finder-label {
+    font-size: 0.8rem;
+    word-break: break-word;
+    line-height: 1.2;
+    max-width: 100%;
+}
+
+
+/* Upload Actions Group */
+.upload-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Matching the Load Sample button to Navbar Options Button */
+.sample-load-btn {
+    /* Inherits .options-btn properties from style.css lines 125-139 */
+    /* Resizing to fit context */
+    font-size: 1rem !important;
+    /* Override large navbar size */
+    padding: 8px 20px !important;
+    margin: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: auto;
+}
+
+.sample-load-btn i {
+    font-size: 1.1rem;
+    margin: 0;
+    color: inherit;
+}
+
 
 #results-modal .viewer iframe {
     flex: 1;

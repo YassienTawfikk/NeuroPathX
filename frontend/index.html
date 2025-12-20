@@ -25,7 +25,7 @@
     </h1>
     <div class="go-to-options">
         <button class="options-btn" id="uploadBtn"><i class="fa-solid fa-cloud-arrow-up"></i></button>
-        <button class="options-btn"><i class="fa-solid fa-clock-rotate-left"></i></button>
+        <button class="options-btn" id="samplesNavBtn"><i class="fa-solid fa-folder-open"></i></button>
         <button class="options-btn"><i class="fa-solid fa-house"></i></button>
     </div>
 </header>
@@ -34,7 +34,17 @@
     <i class="fa-solid fa-cloud-arrow-up"></i>
     <span>Drag and drop file here</span>
     <span><small>Limit 200MB per file • JPG, JPEG, PNG</small></span>
-    <span class="btn">Browse files</span>
+    
+    <div class="upload-actions">
+        <!-- Primary Upload Button -->
+        <span class="btn">Upload Slice</span>
+        
+        <!-- Load Sample Button: Matches Navbar Button Styling -->
+        <button type="button" class="options-btn sample-load-btn" id="openSamplesBtn">
+            <i class="fa-solid fa-folder-open"></i> Load Sample
+        </button>
+    </div>
+    
     <input id="file-upload" type="file" accept=".jpg,.jpeg,.png">
 </label>
 
@@ -83,7 +93,30 @@
 
 </div>
 
-<div id="results-modal">
+<!-- Finder-Style Samples Modal -->
+<div id="samples-modal" class="modal">
+    <div class="finder-window">
+        <!-- Finder Header -->
+        <div class="finder-header">
+            <div class="finder-controls">
+                <button class="close-dots red" id="closeSamplesBtn"></button>
+            </div>
+            <div class="finder-title">Sample Explorer</div>
+        </div>
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="finder-nav" id="finderBreadcrumbs">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Content Area -->
+        <div class="finder-content" id="finderContent">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+
+<div id="results-modal" class="modal">
     <div class="viewer">
         <div class="modal-controls">
             <button class="close-btn" aria-label="Close">✕</button>

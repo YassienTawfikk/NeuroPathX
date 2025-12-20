@@ -2,6 +2,7 @@
 
 // CRITICAL FIX: Import the display function from results.js
 import { displayPredictionResults } from './results.js';
+import { SAMPLE_DIR } from './samples_manifest.js';
 
 function loadSampleFile(url) {
     fetch(url)
@@ -21,19 +22,133 @@ function loadSampleFile(url) {
         })
         .catch(error => {
             console.error("❌ Error loading sample file:", error);
-            inputFile.click();
+            // inputFile.click(); // Don't open file picker on error, just log it.
+            alert("Could not load sample file. Please try another.");
         });
 }
 
-// --- File upload ---
-uploadBtn.addEventListener("click", () => {
-    // New Logic: If no file is loaded, load a sample file automatically.
-    if (inputFile.files.length === 0) {
-        // Updated Path: Served from frontend/assets for Vercel compatibility
-        loadSampleFile("assets/sample_glioma.jpg");
-    } else {
-        inputFile.click();
+// =========================================================================
+// Finder-Style Explorer Logic
+// =========================================================================
+const samplesModal = document.getElementById('samples-modal');
+const openSamplesBtn = document.getElementById('openSamplesBtn');
+const samplesNavBtn = document.getElementById('samplesNavBtn');
+const closeSamplesBtn = document.getElementById('closeSamplesBtn');
+const finderContent = document.getElementById('finderContent');
+const finderBreadcrumbs = document.getElementById('finderBreadcrumbs');
+
+// State
+let currentFolder = SAMPLE_DIR; // Start at root
+let pathHistory = [SAMPLE_DIR]; // Breadcrumb stack
+
+function renderFinder() {
+    finderContent.innerHTML = '';
+
+    // Safety check
+    if (!currentFolder || !currentFolder.children) return;
+
+    currentFolder.children.forEach(item => {
+        const el = document.createElement('div');
+        el.className = item.type === 'folder' ? 'finder-item folder-item' : 'finder-item file-item';
+
+        // Icon / Thumbnail
+        if (item.type === 'folder') {
+            el.innerHTML = `
+                <i class="fa-solid fa-folder finder-icon"></i>
+                <div class="finder-label">${item.name}</div>
+            `;
+            el.onclick = () => navigateToFolder(item);
+        } else {
+            // It's a file
+            el.innerHTML = `
+                <img src="${item.path}" class="finder-thumb" loading="lazy">
+                <div class="finder-label">${item.name}</div>
+            `;
+            el.onclick = () => selectSample(item.path);
+        }
+        finderContent.appendChild(el);
+    });
+
+    renderBreadcrumbs();
+}
+
+function renderBreadcrumbs() {
+    finderBreadcrumbs.innerHTML = '';
+
+    pathHistory.forEach((folder, index) => {
+        // Add Button
+        const btn = document.createElement('button');
+        btn.className = 'crumb-btn';
+        if (index === pathHistory.length - 1) btn.classList.add('active');
+
+        // Root gets a home icon
+        if (index === 0) {
+            btn.innerHTML = '<i class="fa-solid fa-house"></i> Home';
+        } else {
+            btn.textContent = folder.name;
+        }
+
+        btn.onclick = () => navigateToBreadcrumb(index);
+        finderBreadcrumbs.appendChild(btn);
+
+        // Add Separator (unless last item)
+        if (index < pathHistory.length - 1) {
+            const sep = document.createElement('span');
+            sep.className = 'crumb-separator';
+            sep.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+            finderBreadcrumbs.appendChild(sep);
+        }
+    });
+}
+
+function navigateToFolder(folderNode) {
+    pathHistory.push(folderNode);
+    currentFolder = folderNode;
+    renderFinder();
+}
+
+function navigateToBreadcrumb(index) {
+    // Slice history to jump back
+    pathHistory = pathHistory.slice(0, index + 1);
+    currentFolder = pathHistory[pathHistory.length - 1];
+    renderFinder();
+}
+
+function selectSample(path) {
+    loadSampleFile(path);
+    samplesModal.classList.remove('show');
+}
+
+// Modal Controls
+function openFinder() {
+    // Reset to root on open? Or keep state? Let's reset to root for clarity.
+    currentFolder = SAMPLE_DIR;
+    pathHistory = [SAMPLE_DIR];
+    renderFinder();
+    samplesModal.classList.add('show');
+}
+
+openSamplesBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openFinder();
+});
+
+samplesNavBtn.addEventListener('click', openFinder);
+
+closeSamplesBtn.addEventListener('click', () => {
+    samplesModal.classList.remove('show');
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === samplesModal) {
+        samplesModal.classList.remove('show');
     }
+});
+
+
+// --- File upload (Original Browse Button) ---
+uploadBtn.addEventListener("click", () => {
+    inputFile.click();
 });
 inputFile.addEventListener("change", (e) => {
     if (e.target.files.length) handleFile(e.target.files[0]);
@@ -53,6 +168,9 @@ homeBtn.addEventListener("click", () => {
         objectURL = null;
     }
     resetView();
+    // Reset Finder
+    currentFolder = SAMPLE_DIR;
+
     document.body.classList.remove("uploaded");
     sessionStorage.clear();
 });
