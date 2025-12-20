@@ -87,7 +87,7 @@ class KerasClassifier:
         # 1. Create a model that maps the input image to the activations of the last
         #    convolutional layer and the final prediction output.
         grad_model = tf.keras.models.Model(
-            [self._model.inputs],
+            self._model.inputs,
             [self._model.get_layer(last_conv_layer_name).output, self._model.output]
         )
 
@@ -146,18 +146,48 @@ class KerasClassifier:
         # Get standard prediction results using the existing method (or copy logic)
         results = self.predict_from_bytes(file_bytes)
 
-        # 2. Grad-CAM Generation
-        # --- IMPORTANT: Find the name of your last Conv layer! ---
-        # A common name for Xception is 'block14_sepconv2_act'. Check your model summary!
-        LAST_CONV_LAYER_NAME = "xception"
-
         try:
+            # 2. Grad-CAM Generation
+            # --- IMPORTANT: Find the name of your last Conv layer! ---
+            # A common name for Xception is 'block14_sepconv2_act'. Check your model summary!
+            LAST_CONV_LAYER_NAME = "xception" # This might be the name of the nested functional model if wrapping
+
+            # Try to handle potential nested model naming issues or find the real last layer
+            # For now, we attempt with the provided name, but catch errors safely.
             heatmap = self._get_gradcam_heatmap(x, LAST_CONV_LAYER_NAME, pred_index=top_idx)
+            
+            # 3. Overlay and Encoding
+            # Resize heatmap to match original image size for overlay
+            heatmap_resized = cv2.resize(heatmap, (img_original.width, img_original.height))
+    
+            # Convert heatmap array to a colored image (using jet colormap)
+            cmap = cm.get_cmap("jet")
+            # Get RGB channels and convert to 0-255 range
+            heatmap_colored = cmap(heatmap_resized)[:, :, :3]
+            heatmap_colored = (heatmap_colored * 255).astype(np.uint8)
+    
+            # Convert PIL image to OpenCV BGR format (needed for weighted overlay)
+            img_cv2 = cv2.cvtColor(np.array(img_original), cv2.COLOR_RGB2BGR)
+    
+            # Create a weighted overlay (0.6 for MRI image, 0.4 for heatmap)
+            overlay = cv2.addWeighted(img_cv2, 0.6, heatmap_colored, 0.4, 0)
+    
+            # 4. Encode the result (original + overlay) to Base64 JPEG
+            # Encode as JPEG bytes
+            _, buffer = cv2.imencode('.jpeg', overlay, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+            # Convert bytes to Base64 string for JSON transport
+            gradcam_b64 = base64.b64encode(buffer).decode("utf-8")
+    
+            results["gradcam_b64"] = gradcam_b64
+            results["note"] += " | Grad-CAM heatmap included."
+            
         except Exception as e:
             logger.error(f"Grad-CAM generation failed: {e}")
             results["gradcam_b64"] = ""
-            results["note"] += " | Grad-CAM failed."
-            return results
+            results["note"] += " | Grad-CAM skipped due to error."
+            # We purposely do NOT raise here, so the user at least gets the text prediction.
+
+        return results
 
         # 3. Overlay and Encoding
         # Resize heatmap to match original image size for overlay
