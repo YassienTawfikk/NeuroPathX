@@ -1,3 +1,6 @@
+# NeuroPathX
+
+
 ## Live Demo
 
 <https://github.com/user-attachments/assets/21eeda36-77e0-4ad1-9d48-09ac86ec6b2d>
