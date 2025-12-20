@@ -1,9 +1,11 @@
 # NeuroPathX
 
+![App Design Overview](https://github.com/user-attachments/assets/d55cddc4-67d7-4443-9b0a-83968fdc7baa)
 
-## Live Demo
+---
+## 🌐 Live Demo
 
-<https://github.com/user-attachments/assets/21eeda36-77e0-4ad1-9d48-09ac86ec6b2d>
+> <a href="https://neuropathx.vercel.app" target="_blank" rel="noopener noreferrer">NeuroPathX</a>
 
 ---
 
