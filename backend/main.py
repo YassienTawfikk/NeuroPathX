@@ -101,6 +101,11 @@ def health_check():
     return {"status": "ok", "model_loaded": classifier is not None}
 
 
+@app.get("/")
+def read_root():
+    return {"message": "NeuroPathX Backend is running", "docs": "/docs"}
+
+
 # ------------------------
 # Prediction Endpoint (classification) - FULLY UPDATED FOR REPORT DATA
 # ------------------------
