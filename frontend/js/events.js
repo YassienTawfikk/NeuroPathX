@@ -169,7 +169,16 @@ diagnoseBtn.addEventListener("click", async () => {
             body: formData,
         });
 
-        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        if (!response.ok) {
+            let errorMessage = `Server error: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.detail) errorMessage = errorData.detail;
+            } catch (e) {
+                // Could not parse JSON, stick to generic error
+            }
+            throw new Error(errorMessage);
+        }
         const result = await response.json();
 
         // Call the imported function to display the rich results
