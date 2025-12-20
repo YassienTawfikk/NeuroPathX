@@ -83,7 +83,19 @@ class KerasClassifier:
                     return self._original_compute_output_spec(inputs, **kwargs)
 
                 Flatten.compute_output_spec = _patched_compute_output_spec
-                logger.info("Monkey-patched keras.layers.Flatten to handle list inputs.")
+
+                # AND patch the 'call' method itself (runtime execution)
+                if not hasattr(Flatten, "_original_call"):
+                    Flatten._original_call = Flatten.call
+                    
+                    def _patched_call(self, inputs, *args, **kwargs):
+                        if isinstance(inputs, list) and len(inputs) == 1:
+                            inputs = inputs[0]
+                        return self._original_call(inputs, *args, **kwargs)
+                    
+                    Flatten.call = _patched_call
+
+                logger.info("Monkey-patched keras.layers.Flatten (output_spec & call) to handle list inputs.")
             # -------------------------------------------------------------------
 
             if not os.path.exists(self.model_path):
