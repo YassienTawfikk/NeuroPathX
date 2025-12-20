@@ -66,7 +66,25 @@ class KerasClassifier:
         try:
             # We delay the TF import to allow the class to be instantiated without TF being installed
             import tensorflow as tf
-            from tensorflow.keras.models import load_model
+            import keras
+            from keras.models import load_model
+            from keras.layers import Flatten
+
+            # --- MONKEY PATCH: Fix for Keras 3 "Flatten received list" error ---
+            # The saved model seems to pass a list [tensor] to Flatten, which Keras 3 rejects.
+            # We patch compute_output_spec to unwrap the list if encountered.
+            if not hasattr(Flatten, "_original_compute_output_spec"):
+                Flatten._original_compute_output_spec = Flatten.compute_output_spec
+
+                def _patched_compute_output_spec(self, inputs, **kwargs):
+                    # Unwrap list if it contains a single tensor
+                    if isinstance(inputs, list) and len(inputs) == 1:
+                        inputs = inputs[0]
+                    return self._original_compute_output_spec(inputs, **kwargs)
+
+                Flatten.compute_output_spec = _patched_compute_output_spec
+                logger.info("Monkey-patched keras.layers.Flatten to handle list inputs.")
+            # -------------------------------------------------------------------
 
             if not os.path.exists(self.model_path):
                 raise FileNotFoundError(f"Model file not found at: {self.model_path}")
