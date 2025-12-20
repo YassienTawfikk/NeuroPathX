@@ -1,22 +1,3 @@
----
-title: NeuroPathX
-emoji: 🧠
-colorFrom: gray
-colorTo: blue
-sdk: docker
-pinned: false
-app_file: backend/main.py
-app_port: 7860
----
-
-# NeuroPathX
-
-> ![Overview](https://github.com/user-attachments/assets/f0f406b3-1b7e-4adb-beb7-5713a7293933)
-> **End-to-end web platform for MRI brain tumor analysis using an Xception-based deep learning model.**
->> Supports real-time inference, visualization, and automated clinical-style reporting.
-
----
-
 ## Live Demo
 
 <https://github.com/user-attachments/assets/21eeda36-77e0-4ad1-9d48-09ac86ec6b2d>
