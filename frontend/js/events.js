@@ -182,8 +182,7 @@ diagnoseBtn.addEventListener("click", async () => {
         sessionStorage.setItem("resultsVisible", "true");
     } catch (err) {
         console.error("❌ API error:", err);
-        // Use a custom message box instead of alert()
-        console.error("Something went wrong while contacting the server.");
+        alert(`Error: ${err.message}. Check console for details.`);
     } finally {
         // 2. Hide Loader and Enable Button
         globalLoader.classList.remove("show");

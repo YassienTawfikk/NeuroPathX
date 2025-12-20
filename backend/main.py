@@ -19,7 +19,14 @@ PDF_PATH = "docs/MRI_Report.pdf"
 # CORS: allow your static site to call the API in dev
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # dev-friendly; tighten later
+    allow_origins=[
+        "https://neuropathx.vercel.app",  # Production Frontend
+        "http://localhost:3000",          # Local Dev
+        "http://127.0.0.1:3000",
+        "http://localhost:5500",          # VS Code Live Server
+        "http://127.0.0.1:5500",
+        "*"                               # Temporarily keep wildcard as fallback if specific fails, though less secure
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
