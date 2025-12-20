@@ -196,6 +196,9 @@ window.addEventListener("DOMContentLoaded", () => {
         resultsWrapper.style.display = resultsVisible === "true" ? "grid" : "block";
 
         resetView();
+    } else {
+        // Automatically open Sample Explorer if no image is loaded
+        openFinder();
     }
 });
 
