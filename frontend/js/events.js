@@ -29,8 +29,8 @@ function loadSampleFile(url) {
 uploadBtn.addEventListener("click", () => {
     // New Logic: If no file is loaded, load a sample file automatically.
     if (inputFile.files.length === 0) {
-        // NOTE: Ensure 'sample_glioma.jpg' exists and is served from this path on your server.
-        loadSampleFile("data/test_samples/glioma/sample_glioma.jpg");
+        // Updated Path: Served from frontend/assets for Vercel compatibility
+        loadSampleFile("assets/sample_glioma.jpg");
     } else {
         inputFile.click();
     }

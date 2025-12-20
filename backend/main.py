@@ -142,10 +142,11 @@ async def mri_prediction(file: UploadFile = File(...)):
         LATEST_PREDICTION_CACHE[session_id] = result
 
     except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
+        return JSONResponse(status_code=400, content={"detail": f"Value Error: {str(ve)}"})
     except Exception as e:
         logger.exception("Prediction failed")
-        raise HTTPException(status_code=500, detail="Prediction failed")
+        # Return the actual error message to the client for debugging
+        return JSONResponse(status_code=500, content={"detail": f"Internal Server Error: {str(e)}"})
 
     # Frontend expects keys: class, confidence, note, all_classes, gradcam_b64, preprocessed_b64
     return JSONResponse(content=result)
