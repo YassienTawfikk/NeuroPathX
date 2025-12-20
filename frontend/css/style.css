@@ -62,7 +62,7 @@ body {
     }
 }
 
-.image > img {
+.image>img {
     width: 100%;
 }
 
@@ -247,7 +247,7 @@ button {
 }
 
 #scanImage {
-    user-drag: none;
+    /* user-drag: none; */
     -webkit-user-drag: none;
     user-select: none;
     -webkit-user-select: none;
@@ -575,15 +575,19 @@ Advanced Loader Styles
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0.6;
     }
+
     50% {
         opacity: 1;
     }
@@ -594,6 +598,7 @@ Advanced Loader Styles
         transform: scale(0.85);
         opacity: 0;
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
