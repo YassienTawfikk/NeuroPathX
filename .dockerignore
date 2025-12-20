@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Python / Environment
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# MacOS
+.DS_Store
+
+# Frontend (not needed for backend container)
+frontend/
+docs/
+
+# Local Dev Artifacts
+.gemini/
+.agent/
+reports/
+specs/

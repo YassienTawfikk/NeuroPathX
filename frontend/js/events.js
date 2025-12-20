@@ -1,7 +1,7 @@
 // events.js
 
 // CRITICAL FIX: Import the display function from results.js
-import {displayPredictionResults} from './results.js';
+import { displayPredictionResults } from './results.js';
 
 function loadSampleFile(url) {
     fetch(url)
@@ -11,7 +11,7 @@ function loadSampleFile(url) {
         })
         .then(blob => {
             const fileName = url.substring(url.lastIndexOf('/') + 1);
-            const file = new File([blob], fileName, {type: blob.type});
+            const file = new File([blob], fileName, { type: blob.type });
 
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(file);
@@ -163,7 +163,8 @@ diagnoseBtn.addEventListener("click", async () => {
     formData.append("file", file);
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/mri_prediction", {
+        const baseUrl = window.NEUROPATHX_CONFIG ? window.NEUROPATHX_CONFIG.API_BASE_URL : "http://127.0.0.1:8000";
+        const response = await fetch(`${baseUrl}/mri_prediction`, {
             method: "POST",
             body: formData,
         });
