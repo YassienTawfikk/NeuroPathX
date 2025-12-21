@@ -847,3 +847,258 @@ Advanced Loader Styles
         opacity: 1;
     }
 }
+
+/* ========================================================================================================== */
+/* MOBILE LAYOUT — COMPLETE OVERRIDE (max-width: 768px) */
+/* Desktop styles remain untouched */
+/* ========================================================================================================== */
+
+@media (max-width: 768px) {
+
+    /* -------------------------------
+       GLOBAL
+       ------------------------------- */
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 100% !important;
+        padding: 0 12px;
+    }
+
+    /* -------------------------------
+       HEADER / NAVBAR
+       ------------------------------- */
+    .start-header {
+        width: 100%;
+        height: auto;
+        padding: 12px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .title-autograph {
+        max-width: 100%;
+        font-size: 1.8rem;
+        line-height: 1.1;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform: none !important;
+    }
+
+    body.uploaded .start-header .title-autograph {
+        transform: none !important;
+    }
+
+    .go-to-options {
+        position: static;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        visibility: visible;
+        opacity: 1;
+        margin: 0;
+    }
+
+    .options-btn {
+        font-size: 1.1rem;
+        padding: 6px 14px;
+        margin: 0;
+    }
+
+    /* -------------------------------
+       UPLOAD BOX
+       ------------------------------- */
+    .upload-box {
+        width: 100%;
+        margin: 16px 0;
+        padding: 20px;
+    }
+
+    .upload-box i {
+        font-size: 32px;
+    }
+
+    .upload-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .sample-load-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* -------------------------------
+       SCAN + RESULTS WRAPPER
+       ------------------------------- */
+    .scan-results-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 12px 0;
+    }
+
+    /* -------------------------------
+       SCAN BOX / VIEWER
+       ------------------------------- */
+    .scan-box {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        border-radius: 10px;
+    }
+
+    .viewer-container {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .viewer-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .viewer-header h2 {
+        font-size: 1rem;
+    }
+
+    .viewer-tools {
+        width: 100%;
+        display: flex;
+        gap: 6px;
+    }
+
+    .viewer-tools button {
+        flex: 1;
+        font-size: 0.85rem;
+        padding: 6px;
+    }
+
+    .viewer-image {
+        min-height: 240px;
+    }
+
+    .viewer-footer {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .diagnose-btn {
+        width: 100%;
+        padding: 12px;
+    }
+
+    /* -------------------------------
+       RESULTS BOX
+       ------------------------------- */
+    .results-box {
+        padding: 20px 16px;
+        margin: 0;
+        border-radius: 12px;
+    }
+
+    .result-title {
+        font-size: 1.25rem;
+    }
+
+    .confidence-badge {
+        font-size: 0.8rem;
+    }
+
+    .result-summary {
+        font-size: 0.9rem;
+    }
+
+    .result-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .result-actions button {
+        width: 100%;
+    }
+
+    /* -------------------------------
+       MODALS
+       ------------------------------- */
+    #results-modal .viewer {
+        width: 95%;
+        height: 90vh;
+    }
+
+    #results-modal .close-btn {
+        font-size: 1.5rem;
+    }
+
+    /* -------------------------------
+       SAMPLE EXPLORER (FINDER)
+       ------------------------------- */
+    .finder-window {
+        width: 96vw;
+        height: 88vh;
+        max-width: none;
+        max-height: none;
+        border-radius: 10px;
+    }
+
+    .finder-header {
+        height: 44px;
+        padding: 0 12px;
+    }
+
+    .finder-title {
+        font-size: 0.85rem;
+    }
+
+    .finder-nav {
+        height: auto;
+        padding: 6px 10px;
+    }
+
+    .finder-content {
+        padding: 14px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        grid-auto-rows: 110px;
+        gap: 12px;
+    }
+
+    .finder-icon {
+        font-size: 42px;
+    }
+
+    .finder-thumb {
+        width: 56px;
+        height: 56px;
+    }
+
+    .finder-label {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+
+    /* -------------------------------
+       GLOBAL LOADER
+       ------------------------------- */
+    .loader-spinner {
+        width: 50px;
+        height: 50px;
+    }
+
+    .loader-text {
+        font-size: 1rem;
+    }
+}
