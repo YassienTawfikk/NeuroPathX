@@ -1,8 +1,18 @@
+---
+title: NeuroPathX Backend
+emoji: 🧠
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # NeuroPathX
 
 ![App Design Overview](https://github.com/user-attachments/assets/d55cddc4-67d7-4443-9b0a-83968fdc7baa)
 
 ---
+
 ## 🌐 Live Demo
 
 > <a href="https://neuropathx.vercel.app" target="_blank" rel="noopener noreferrer">NeuroPathX</a>
@@ -34,13 +44,13 @@ The following visuals illustrate how NeuroPathX processes and interprets MRI bra
 
    A visual breakdown of the Xception network used for tumor classification.
 
-3. **Confusion Matrix**
+2. **Confusion Matrix**
 
    <img width="800" height="600" alt="confusion_matrix" src="https://github.com/user-attachments/assets/2f263e94-8a03-4d2d-92e8-bad291b8663d" />
 
    Depicts the prediction performance across all tumor classes, highlighting classification accuracy and error distribution.
 
-4. **Automated Clinical Report Template**
+3. **Automated Clinical Report Template**
 
    NeuroPathX automatically generates structured diagnostic PDFs summarizing each scan analysis. Example output:
 
