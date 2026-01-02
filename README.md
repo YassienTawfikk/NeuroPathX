@@ -1,12 +1,3 @@
----
-title: NeuroPathX Backend
-emoji: 🧠
-colorFrom: blue
-colorTo: purple
-sdk: docker
-pinned: false
----
-
 # NeuroPathX
 
 ![App Design Overview](https://github.com/user-attachments/assets/d55cddc4-67d7-4443-9b0a-83968fdc7baa)
@@ -110,6 +101,7 @@ Main libraries: TensorFlow, FastAPI, NumPy, scikit-learn, Pillow
 > The test/ directory includes sample brain MRI images for validating the model’s predictions and testing the inference pipeline end-to-end.
 
 ---
+
 
 ### Author
 
