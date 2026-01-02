@@ -31,8 +31,8 @@ homeBtn.addEventListener("click", () => {
         objectURL = null;
     }
     resetView();
-    // Reset Finder
-    currentFolder = SAMPLE_DIR;
+    resetView();
+    // Reset Finder handled by openFinder() in samples_manager.js when needed
 
     document.body.classList.remove("uploaded");
     sessionStorage.clear();

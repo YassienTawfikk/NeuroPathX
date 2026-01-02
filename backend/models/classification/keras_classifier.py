@@ -271,8 +271,7 @@ class KerasClassifier:
             saturation = hsv[:, :, 1]
             avg_saturation = np.mean(saturation)
             
-            print(f"DEBUG: Avg Saturation: {avg_saturation}") # <--- DEBUG LOG
-
+            
             # MRI scans are grayscale, so saturation should be very low.
             # Allow a small threshold (e.g., 25) for minor noise orsepia-toned datasets.
             # Normal photos often have saturation > 50-100.
