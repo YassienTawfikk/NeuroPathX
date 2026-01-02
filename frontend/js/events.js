@@ -39,30 +39,11 @@ homeBtn.addEventListener("click", () => {
 });
 
 // --- Restore state on reload ---
+// --- Restore state on reload ---
 window.addEventListener("DOMContentLoaded", () => {
-    const savedImage = sessionStorage.getItem("uploadedImage");
-    const savedName = sessionStorage.getItem("uploadedName");
-
-    if (savedImage) {
-        objectURL = savedImage;
-        img.src = savedImage;
-        img.alt = savedName || "Uploaded Image";
-
-        document.body.classList.add("uploaded");
-        document.querySelector(".upload-box").style.display = "none";
-        document.querySelector(".scan-box").style.display = "grid";
-        document.querySelector(".start-header .title-autograph").style.transform =
-            "translateX(calc(-50vw + 150px))";
-
-        const resultsVisible = sessionStorage.getItem("resultsVisible");
-        resultsBox.style.display = resultsVisible === "true" ? "flex" : "none";
-        resultsWrapper.style.display = resultsVisible === "true" ? "grid" : "block";
-
-        resetView();
-    } else {
-        // Automatically open Sample Explorer if no image is loaded
-        openFinder();
-    }
+    // We do NOT restore the image from sessionStorage because Blob URLs are revoked on reload.
+    // Instead, we just open the Finder/Sample explorer if starting fresh.
+    openFinder();
 });
 
 // --- Drag & drop upload ---
@@ -131,20 +112,32 @@ img.addEventListener("contextmenu", (e) => e.preventDefault());
 
 // --- Diagnose button → API call with Loader Integration ---
 diagnoseBtn.addEventListener("click", async () => {
-    if (!inputFile.files.length) {
+    if (!currentFile) {
         // Use a custom message box instead of alert()
         console.error("Please upload an MRI image first.");
+        showErrorModal("Please upload an MRI image first.");
         return;
     }
 
     // 1. Show Loader and Disable Button
+    const loaderText = globalLoader.querySelector(".loader-text");
+    const loaderSubtext = globalLoader.querySelector(".loader-subtext");
+
+    loaderText.innerText = "Analyzing MRI Scan...";
+    loaderSubtext.innerText = "";
+
     globalLoader.classList.add("show");
     diagnoseBtn.disabled = true;
     diagnoseBtn.classList.add("disabled");
 
-    const file = inputFile.files[0];
+    // Timeout to show "Server Waking Up" message if it takes too long
+    const wakeupTimeout = setTimeout(() => {
+        loaderText.innerText = "Server is waking up...";
+        loaderSubtext.innerText = "This may take a minute for the cold start. Subsequent predictions will be fast!";
+    }, 3000); // 3 seconds
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", currentFile);
 
     try {
         const baseUrl = window.NEUROPATHX_CONFIG ? window.NEUROPATHX_CONFIG.API_BASE_URL : "http://127.0.0.1:8000";
@@ -152,6 +145,8 @@ diagnoseBtn.addEventListener("click", async () => {
             method: "POST",
             body: formData,
         });
+
+        clearTimeout(wakeupTimeout); // Clear timeout on response
 
         if (!response.ok) {
             let errorMessage = `Server error: ${response.status}`;
@@ -175,11 +170,36 @@ diagnoseBtn.addEventListener("click", async () => {
         sessionStorage.setItem("resultsVisible", "true");
     } catch (err) {
         console.error("❌ API error:", err);
-        alert(`Error: ${err.message}. Check console for details.`);
+        showErrorModal(err.message);
     } finally {
+        clearTimeout(wakeupTimeout); // Ensure timeout is cleared on error too
         // 2. Hide Loader and Enable Button
         globalLoader.classList.remove("show");
         diagnoseBtn.disabled = false;
         diagnoseBtn.classList.remove("disabled");
     }
 });
+
+// --- Error Modal Logic ---
+const errorModal = document.getElementById("error-modal");
+const errorMessageEl = document.getElementById("error-message");
+const closeErrorBtn = document.getElementById("closeErrorBtn");
+
+function showErrorModal(message) {
+    if (errorMessageEl) errorMessageEl.innerText = message;
+    if (errorModal) errorModal.classList.add("show");
+}
+
+if (closeErrorBtn) {
+    closeErrorBtn.addEventListener("click", () => {
+        if (errorModal) errorModal.classList.remove("show");
+    });
+}
+
+if (errorModal) {
+    window.addEventListener("click", (e) => {
+        if (e.target === errorModal) {
+            errorModal.classList.remove("show");
+        }
+    });
+}

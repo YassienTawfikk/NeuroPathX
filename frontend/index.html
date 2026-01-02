@@ -130,6 +130,7 @@
     <div class="loader-content">
         <div class="loader-spinner"></div>
         <div class="loader-text">Analyzing MRI Scan...</div>
+        <div class="loader-subtext"></div>
     </div>
 </div>
 
@@ -139,6 +140,22 @@
 <script src="js/viewer.js"></script>
 <script src="js/fileHandler.js"></script>
 <script src="js/init.js"></script>
+
+<!-- Custom Error Modal -->
+<div id="error-modal" class="modal">
+    <div class="error-window">
+        <div class="error-header">
+            <i class="fa-solid fa-circle-exclamation error-icon"></i>
+            <h3>Error</h3>
+        </div>
+        <div class="error-body">
+            <p id="error-message">Something went wrong.</p>
+        </div>
+        <div class="error-footer">
+            <button id="closeErrorBtn">OK</button>
+        </div>
+    </div>
+</div>
 
 <script src="js/clinicalData.js" type="module"></script>
 <script src="js/results.js" type="module"></script>

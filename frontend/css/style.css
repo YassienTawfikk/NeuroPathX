@@ -797,6 +797,79 @@ Advanced Loader Styles
     animation: popIn 0.5s ease forwards;
 }
 
+.loader-subtext {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    animation: fadeIn 1s ease 2s forwards;
+    opacity: 0;
+}
+
+/* ======================= 
+   Error Modal Styles 
+======================= */
+.error-window {
+    background: var(--bg2);
+    width: 400px;
+    max-width: 90%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: popIn 0.3s ease forwards;
+    overflow: hidden;
+    text-align: center;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.error-header {
+    background: #ff5f56;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-header .error-icon {
+    font-size: 3rem;
+    margin-bottom: 5px;
+}
+
+.error-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.error-body {
+    padding: 25px;
+    color: var(--btow);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.error-footer {
+    padding: 0 20px 20px;
+}
+
+.error-footer button {
+    background: #ff5f56;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 6px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0;
+}
+
+.error-footer button:hover {
+    background: #ff3b30;
+}
+
+
+
 .loader-spinner {
     border: 5px solid rgba(255, 255, 255, 0.2);
     border-top: 5px solid #00c2ff;

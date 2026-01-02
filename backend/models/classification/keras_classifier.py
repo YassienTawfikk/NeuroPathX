@@ -161,6 +161,8 @@ class KerasClassifier:
         and the heatmap as a Base64-encoded JPEG image string.
         """
         # 1. Prediction and Preprocessing
+        self.validate_is_mri(file_bytes)  # <--- Validation Check
+
         self._load_model()
 
         # We need the original image for the overlay later
@@ -247,6 +249,77 @@ class KerasClassifier:
 
     # <--- NEW GRAD-CAM METHOD END --->
 
+    # <--- NEW GRAD-CAM METHOD END --->
+
+    def validate_is_mri(self, file_bytes: bytes):
+        """
+        Validates if the uploaded image looks like a brain MRI using heuristics:
+        1. Low Color Saturation (MRIs are grayscale).
+        2. Dark Corners (MRI slices usually have black backgrounds).
+        Raises ValueError if validation fails.
+        """
+        try:
+            # Decode image to BGR for OpenCV
+            nparr = np.frombuffer(file_bytes, np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+            if img is None:
+                raise ValueError("Could not decode image.")
+
+            # --- Heuristic 1: Saturation Check ---
+            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+            saturation = hsv[:, :, 1]
+            avg_saturation = np.mean(saturation)
+            
+            print(f"DEBUG: Avg Saturation: {avg_saturation}") # <--- DEBUG LOG
+
+            # MRI scans are grayscale, so saturation should be very low.
+            # Allow a small threshold (e.g., 25) for minor noise orsepia-toned datasets.
+            # Normal photos often have saturation > 50-100.
+            # Tightened threshold to 10 to catch more "random" images that might be dim but colorful.
+            if avg_saturation > 10:
+                logger.warning(f"Image rejected. Avg Saturation: {avg_saturation:.2f}")
+                raise ValueError("Please upload a valid brain MRI slice. The image appears to be a non-medical photo (too colorful).")
+
+            # --- Heuristic 2: Corner Brightness Check ---
+            # Brain MRI slices are typically centered with a black background.
+            # We check the average brightness of the 4 corners (e.g., 10% size of the image).
+            h, w, _ = img.shape
+            corner_size_h = int(h * 0.1)
+            corner_size_w = int(w * 0.1)
+
+            # Extract corners
+            tl = img[0:corner_size_h, 0:corner_size_w]
+            tr = img[0:corner_size_h, w-corner_size_w:w]
+            bl = img[h-corner_size_h:h, 0:corner_size_w]
+            br = img[h-corner_size_h:h, w-corner_size_w:w]
+
+            # Calculate average brightness (grayscale)
+            corners = [tl, tr, bl, br]
+            avg_corner_brightness = []
+            for c in corners:
+                gray_c = cv2.cvtColor(c, cv2.COLOR_BGR2GRAY)
+                avg_corner_brightness.append(np.mean(gray_c))
+
+            # If the average brightness of ALL corners is too high, it's likely a photo or screenshot.
+            # We use the mean of the corner means.
+            total_avg_corner_brightness = np.mean(avg_corner_brightness)
+
+            # Tightened threshold to 40.
+            if total_avg_corner_brightness > 40:
+                logger.warning(f"Image rejected. Avg Corner Brightness: {total_avg_corner_brightness:.2f}")
+                raise ValueError("Please upload a valid brain MRI slice. The image background does not look like a scan.")
+
+        except ValueError as ve:
+            raise ve
+        except Exception as e:
+            logger.error(f"Validation failed with unexpected error: {e}")
+            # If validation crashes, we can choose to fail open or closed.
+            # Here we fail open (allow it) but log error, or fail closed.
+            # Let's fail closed to be safe if that's the requirement, or just pass.
+            # For now, let's pass if our check failed to run (e.g. cv2 issue) to avoid blocking valid usage.
+            pass
+
     def _preprocess(self, pil_image: Image.Image) -> Any:
         # ... existing _preprocess method (keep as is) ...
         try:
@@ -287,6 +360,7 @@ class KerasClassifier:
         except Exception as e:
             raise ValueError(f"Unable to open image: {e}") from e
 
+        self.validate_is_mri(file_bytes)  # <--- Validation Check
         self._load_model()
         x = self._preprocess(img)
 

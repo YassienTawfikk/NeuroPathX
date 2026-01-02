@@ -1,5 +1,6 @@
 // fileHandler.js
 function handleFile(file) {
+    currentFile = file; // Store globally for API usage
     if (!ALLOWED.includes(file.type)) {
         alert("Only JPG and PNG are supported.");
         return;

@@ -152,7 +152,7 @@ async def mri_prediction(file: UploadFile = File(...)):
         LATEST_PREDICTION_CACHE[session_id] = result
 
     except ValueError as ve:
-        return JSONResponse(status_code=400, content={"detail": f"Value Error: {str(ve)}"})
+        return JSONResponse(status_code=400, content={"detail": str(ve)})
     except Exception as e:
         logger.exception("Prediction failed")
         # Return the actual error message to the client for debugging
